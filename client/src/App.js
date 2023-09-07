@@ -9,8 +9,10 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
-      <h1>{!data ? "Loading..." : data}</h1>
+    <div className="container">
+      <button type="button" className="btn btn-success">
+        {!data ? "Loading..." : data}
+      </button>
     </div>
   );
 };

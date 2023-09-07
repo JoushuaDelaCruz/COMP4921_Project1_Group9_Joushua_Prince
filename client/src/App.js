@@ -9,11 +9,14 @@ const App = () => {
   }, []);
 
   return (
-    <div className="container">
-      <button type="button" className="btn btn-success">
-        {!data ? "Loading..." : data}
-      </button>
-    </div>
+    <>
+      <header className="mb-auto"></header>
+      <div className="d-flex justify-content-center align-items-center h-100 p-5 bg-dark rounded-3">
+        <button type="button" className="btn btn-success">
+          {!data ? "Loading..." : data}
+        </button>
+      </div>
+    </>
   );
 };
 

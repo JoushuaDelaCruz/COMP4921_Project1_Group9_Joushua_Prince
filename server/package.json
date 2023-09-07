@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "server": "nodemon index.js",
+    "client": "npm run start --prefix ../client",
+    "dev": "concurrently --kill-others-on-fail \" npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",

@@ -1,22 +1,18 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 const App = () => {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    axios.get("/api").then((res) => setData(res.data));
-  }, []);
-
   return (
-    <>
-      <header className="mb-auto"></header>
-      <div className="d-flex justify-content-center align-items-center h-100 p-5 bg-dark rounded-3">
-        <button type="button" className="btn btn-success">
-          {!data ? "Loading..." : data}
-        </button>
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" exact element={<div> hi! </div>}></Route>
+        <Route path="/home" exact element={<div> Hello world! </div>} />
+        <Route path="/login" exact element={<Login />}></Route>
+        <Route path="/signup" exact element={<Signup />}></Route>
+        <Route path="*" element={<div> 404 </div>} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

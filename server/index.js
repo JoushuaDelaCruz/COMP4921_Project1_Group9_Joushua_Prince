@@ -34,7 +34,7 @@ var mongoStore = MongoStore.create({
 
 app.use(session({ 
   secret: node_session_secret,
-store: mongoStore, //default is memory store 
+store: mongoStore, 
 saveUninitialized: false, 
 resave: true,
   cookie: {
@@ -44,11 +44,23 @@ resave: true,
 ));
 
 app.get("/api", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello World, using proxy to reach server side");
 });
 
 app.get("*", (req, res) => {
   res.status(404);
+});
+
+app.get('/createTables', async (req,res) => {
+  console.log("Attempt to create table")
+  const create_tables = include('database/create_tables');
+  var success = create_tables.createTables();
+  if (success) {
+      res.render("successMessage", {message: "Created tables."} );
+  }
+  else {
+      res.render("errorMessage", {error: "Failed to create tables."} );
+  }
 });
 
 app.listen(PORT, () => {

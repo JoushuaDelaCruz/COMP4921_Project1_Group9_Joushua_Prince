@@ -22,15 +22,6 @@ async function createTables() {
         );
     `;
     
-    let createTodoSQL = `
-        CREATE TABLE IF NOT EXISTS todo (
-            todo_id INT NOT NULL AUTO_INCREMENT,
-            description VARCHAR(100) NOT NULL,
-            frn_user_id INT NOT NULL,
-            PRIMARY KEY (todo_id),
-            FOREIGN KEY (frn_user_id) REFERENCES user (user_id)
-        );
-    `;
 
     try {
         const userTypeResults = await database.query(createUserTypeSQL);
@@ -40,7 +31,6 @@ async function createTables() {
         console.log("Successfully created tables");
         console.log(userResults[0]);
         console.log(userTypeResults[0]);
-        console.log(todoResults[0]);
 
         return true;
     } catch (err) {

@@ -10,7 +10,5 @@ const dbConfig = {
 	namedPlaceholders: true
 
 };
-
 var database = mysql.createPool(dbConfig);
-
 module.exports = database;

@@ -26,7 +26,6 @@ async function createTables() {
     try {
         const userTypeResults = await database.query(createUserTypeSQL);
         const userResults = await database.query(createUserSQL);
-        const todoResults = await database.query(createTodoSQL);
 
         console.log("Successfully created tables");
         console.log(userResults[0]);

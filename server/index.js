@@ -1,6 +1,5 @@
 const express = require("express");
 require('./utils');
-
 require('dotenv').config();
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -20,8 +19,6 @@ const mongodb_session_secret =process.env.MONGODB_SESSION_SECRET;;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 /* END secret section */
 
-// set view engine to ejs
-app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({extended: false}));
 
@@ -47,20 +44,23 @@ app.get("/api", (req, res) => {
   res.send("Hello World, using proxy to reach server side");
 });
 
-app.get("*", (req, res) => {
-  res.status(404);
-});
+
 
 app.get('/createTables', async (req,res) => {
   console.log("Attempt to create table")
   const create_tables = include('database/create_tables');
   var success = create_tables.createTables();
   if (success) {
-      res.render("successMessage", {message: "Created tables."} );
+      res.send("successMessage" );
   }
   else {
-      res.render("errorMessage", {error: "Failed to create tables."} );
+      res.send("errorMessage" );
   }
+
+});
+
+app.get("*", (req, res) => {
+  res.status(404);
 });
 
 app.listen(PORT, () => {

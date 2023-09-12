@@ -69,8 +69,14 @@ app.post('/api/createUser', async (req, res) => {
 console.log(req.body)
 
   try {
-    const { user, hashedPassword } = req.body;
+    const { user, password } = req.body;
 
+     // Hash the password using bcrypt
+     // TODO: debug hashing password
+
+     const saltRounds = 10; 
+     const hashedPassword = await bcrypt.hash(password, saltRounds);
+   
     const success = await db_users.createUser({ user, hashedPassword });
 
     if (success) {

@@ -10,8 +10,8 @@ async function createUser(postData) {
 
 
 	let params = {
-		user: postData.user,
-		passwordHash: postData.hashedPassword,
+		user: postData.username,
+		passwordHash: postData.password,
         
 	}
 	
@@ -29,4 +29,32 @@ async function createUser(postData) {
 	}
 }
 
-module.exports = {createUser};
+async function getUsers(postData) {
+	console.log("Checking users in database" + postData)
+	console.log(postData)
+	let getUsersSQL = `
+		SELECT *
+		FROM user
+		WHERE username = :username;
+	`;
+	let params = {
+		username: postData.user
+	}
+	try {
+		const results = await database.query(getUsersSQL, params);
+		if (results){
+        console.log("Successfully retrieved users");
+		console.log(results[0]);
+		return results[0];}
+		else {
+			
+		}
+	}
+	catch(err) {
+		console.log("Error getting users");
+        console.log(err);
+		return false;
+	}
+}
+
+module.exports = {createUser, getUsers};

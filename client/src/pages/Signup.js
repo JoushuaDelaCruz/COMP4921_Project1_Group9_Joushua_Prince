@@ -65,8 +65,11 @@ const Signup = () => {
       try {
         const response = await axios.post('/api/createUser', {
           user: username,
-          hashedPassword: password, // Assuming you have the hashed password available
-        });
+          password: password, // Assuming you have the hashed password available
+        }); 
+        if (response.status == 200) {
+          
+        }
 
       } catch (error) {
         console.error('Error while creating user:', error);

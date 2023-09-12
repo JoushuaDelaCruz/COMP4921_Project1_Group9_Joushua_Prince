@@ -24,7 +24,6 @@ const mongodb_session_secret =process.env.MONGODB_SESSION_SECRET;;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 /* END secret section */
 
-
 app.use(express.urlencoded({extended: false}));
 
 var mongoStore = MongoStore.create({
@@ -50,7 +49,6 @@ app.get("/api", (req, res) => {
 });
 
 
-
 app.get('/createTables', async (req,res) => {
   console.log("Attempt to create table")
   const create_tables = include('database/create_tables');
@@ -74,10 +72,10 @@ console.log(req.body)
      // Hash the password using bcrypt
      // TODO: debug hashing password
 
-     const saltRounds = 10; 
-     const hashedPassword = await bcrypt.hash(password, saltRounds);
+    //  const saltRounds = 10; 
+    //  const hashedPassword = await bcrypt.hash(password, saltRounds);
    
-    const success = await db_users.createUser({ user, hashedPassword });
+    const success = await db_users.createUser({ user, password });
 
     if (success) {
       console.log('User created successfully');
@@ -91,6 +89,20 @@ console.log(req.body)
     res.status(500).json({ error: 'Failed to create user' });
   }
 });
+
+
+app.post('/api/login', async (req, res) => {
+  const { user, password } = req.body;
+
+  var results = await db_users.getUsers({ user: user, password: password });
+  if (results) {
+    console.log('User Existsssssssss');
+    res.status(200).json({ message: 'User FOund' });
+  } else{
+    console.log('User Does not exist');
+
+  } 
+})
 
 
 

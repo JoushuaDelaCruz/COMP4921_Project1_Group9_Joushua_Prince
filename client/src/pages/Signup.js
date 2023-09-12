@@ -60,20 +60,14 @@ const Signup = () => {
   };
 
   const createUser = async () => {
+    console.log("createUser function called");
     if (validateUsername() && validatePassword()) {
       try {
         const response = await axios.post('/api/createUser', {
           user: username,
           hashedPassword: password, // Assuming you have the hashed password available
         });
-  
-        if (response.status === 200) {
-          console.log('User created successfully');
-          // You can redirect to a success page or perform other actions here
-        } else {
-          console.error('Failed to create user');
-          // Handle the error, show an error message, etc.
-        }
+
       } catch (error) {
         console.error('Error while creating user:', error);
         // Handle any unexpected errors here

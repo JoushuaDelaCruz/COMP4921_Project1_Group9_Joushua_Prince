@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from 'axios';
+
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -58,9 +60,21 @@ const Signup = () => {
   };
 
   const createUser = async () => {
-    console.log(validateUsername());
-    console.log(validatePassword());
+    console.log("createUser function called");
+    if (validateUsername() && validatePassword()) {
+      try {
+        const response = await axios.post('/api/createUser', {
+          user: username,
+          hashedPassword: password, // Assuming you have the hashed password available
+        });
+
+      } catch (error) {
+        console.error('Error while creating user:', error);
+        // Handle any unexpected errors here
+      }
+    }
   };
+  
 
   return (
     <main className="vh-100 bg-dark bg-opacity-25">

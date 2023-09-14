@@ -14,6 +14,9 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(express.json());
 
+// Have Node serve the files for our built React app
+app.use(express.static(path.resolve(__dirname, "../client/build")));
+
 /* secret information section */
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;

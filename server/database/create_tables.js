@@ -1,19 +1,6 @@
 const database = include('databaseConnection');
 
-// Define a stored function to generate unique URL-friendly PKs
-const createShortUrlPrimaryKeyFunction = `
-    CREATE FUNCTION generateUniqueShortUrlPK() RETURNS VARCHAR(7)
-    BEGIN
-        DECLARE shortCode VARCHAR(7);
-        SET shortCode = LEFT(CONV(FLOOR(RAND() * 9999999), 10, 36), 7);
-        
-        WHILE EXISTS(SELECT id FROM short_url WHERE short_code = shortCode) DO
-            SET shortCode = LEFT(CONV(FLOOR(RAND() * 9999999), 10, 36), 7);
-        END WHILE;
-        
-        RETURN shortCode;
-    END;
-`;
+
 
 async function createTables() {
     let createUserSQL = `
@@ -28,19 +15,18 @@ async function createTables() {
 
     let createShortUrlTableSQL = `
         CREATE TABLE IF NOT EXISTS short_url (
-            short_code VARCHAR(7) NOT NULL,
+            id VARCHAR(10) NOT NULL,
             original_url TEXT NOT NULL,
+            short_code VARCHAR(7) NOT NULL,
             user_id INT NOT NULL,
-            hits INT DEFAULT 0,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (short_code),
+            PRIMARY KEY (id),
             FOREIGN KEY (user_id) REFERENCES user(user_id)
         );
     `;
 
     try {
         const userResults = await database.query(createUserSQL);
-        const shortUrlResults = await database.query(createShortUrlPrimaryKeyFunction);
+        // const shortUrlResults = await database.query(createShortUrlPrimaryKeyFunction);
         const createFunctionResults = await database.query(createShortUrlTableSQL);
 
         console.log("Successfully created tables and function");

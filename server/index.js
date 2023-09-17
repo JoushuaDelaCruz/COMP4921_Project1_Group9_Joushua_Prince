@@ -1,3 +1,5 @@
+
+
 const express = require("express");
 require('./utils');
 require('dotenv').config();
@@ -7,8 +9,10 @@ const bcrypt = require('bcrypt');
 const database = include('databaseConnection');
 const db_utils = include('database/db_utils');
 const db_users = include('database/users');
-const saltRounds = 12;
+const db_url = include('database/create_url');
 
+const saltRounds = 12;
+const shortId = require('shortid')
 
 
 const PORT = process.env.PORT || 5000;
@@ -104,6 +108,31 @@ app.post('/api/login', async (req, res) => {
   } 
 })
 
+
+
+
+app.post('/api/shortenURL', async (req, res) => {
+  try {
+    const { originalURL } = req.body;
+    console.log(originalURL)
+    // Generate a unique short ID using short-unique-id
+ // Generate a unique short ID using shortid
+ const shortURL = shortId.generate();
+
+    
+    // You can store this shortURL in your database, associating it with the originalURL
+    var results = await db_url.createURL({ originalURL: originalURL, shortURL: shortURL });
+    console.log('Original URL:', originalURL);
+    console.log('Short URL:', shortURL);
+if (results){
+  res.status(201).json({ shortURL: shortURL });
+}
+ 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 app.get("*", (req, res) => {

@@ -9,6 +9,7 @@ const app = express();
 const loginRouter = require("./routers/login");
 const signUpRouter = require("./routers/signUp");
 const urlShorteningRouter = require("./routers/urlShortening");
+const homeRouter = require("./routers/homepage");
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
@@ -16,6 +17,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.use("/login", loginRouter);
 app.use("/signup", signUpRouter);
+app.use("/home", homeRouter);
 
 //** MongoDB Session */
 /* secret information section */
@@ -46,7 +48,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("index");
+  res.redirect("/home");
 });
 
 app.get("*", (req, res) => {

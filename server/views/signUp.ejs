@@ -8,12 +8,29 @@
           <h2 class="card-title text-center mb-5 fw-normal fs-6 text-body-secondary">Create your LinkMorpher Account</h2>
           <form action="/signUp/createUser" method="post">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" name="username" placeholder="Username" >
-                <label for="floatingInput">Email address</label>
+                <input type="text" name="username" placeholder="Username" 
+                      value="<%=username%>"
+                       class="form-control <% if (locals.isUserValid) { %> 
+                                              <%= isUserValid %>"
+                                           <% } %>" >
+                <label for="username">Username</label>
+                <% if (locals.usernameInvalidMessage) { %> 
+                  <div class="invalid-feedback">
+                      <%= usernameInvalidMessage %>
+                  </div>
+              <% } %> 
             </div>
             <div class="form-floating mb-3">
-              <input type="password" class="form-control" name="password" placeholder="Password">
-              <label for="floatingPassword">Password</label>
+              <input type="password" name="password" placeholder="Password" 
+                       class="form-control <% if (locals.isPasswordValid) { %> 
+                                              <%= isPasswordValid %>"
+                                           <% } %>">
+                <label for="password">Password</label>
+                <% if (locals.passwordInvalidMessage) { %> 
+                  <div class="invalid-feedback">
+                      <%= passwordInvalidMessage %>
+                  </div>
+              <% } %> 
             </div>
             <div class="d-grid">
               <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Sign

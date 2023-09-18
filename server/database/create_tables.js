@@ -1,9 +1,7 @@
-const database = include('databaseConnection');
-
-
+const database = include("mySQLDatabaseConnection");
 
 async function createTables() {
-    let createUserSQL = `
+  let createUserSQL = `
         CREATE TABLE IF NOT EXISTS user (
             user_id INT NOT NULL AUTO_INCREMENT,
             username VARCHAR(25) NOT NULL,
@@ -13,7 +11,7 @@ async function createTables() {
         );
     `;
 
-    let createShortUrlTableSQL = `
+  let createShortUrlTableSQL = `
         CREATE TABLE IF NOT EXISTS short_url (
             id VARCHAR(10) NOT NULL,
             original_url TEXT NOT NULL,
@@ -24,21 +22,21 @@ async function createTables() {
         );
     `;
 
-    try {
-        const userResults = await database.query(createUserSQL);
-        // const shortUrlResults = await database.query(createShortUrlPrimaryKeyFunction);
-        const createFunctionResults = await database.query(createShortUrlTableSQL);
+  try {
+    const userResults = await database.query(createUserSQL);
+    // const shortUrlResults = await database.query(createShortUrlPrimaryKeyFunction);
+    const createFunctionResults = await database.query(createShortUrlTableSQL);
 
-        console.log("Successfully created tables and function");
-        console.log("User Table:", userResults[0]);
-        console.log("Short URL Table:", createFunctionResults[0]);
+    console.log("Successfully created tables and function");
+    console.log("User Table:", userResults[0]);
+    console.log("Short URL Table:", createFunctionResults[0]);
 
-        return true;
-    } catch (err) {
-        console.log("Error Creating tables and function");
-        console.log(err);
-        return false;
-    }
+    return true;
+  } catch (err) {
+    console.log("Error Creating tables and function");
+    console.log(err);
+    return false;
+  }
 }
 
 module.exports = { createTables };

@@ -1,4 +1,4 @@
-const database = include('databaseConnection');
+const database = include("mySQLDatabaseConnection");
 
 // Define a stored function to generate unique URL-friendly PKs
 const createShortUrlPrimaryKeyFunction = `
@@ -28,33 +28,30 @@ DELIMITER ;
 
 `;
 
-
 async function createURL(postData) {
-	let createURL = `
+  let createURL = `
     INSERT INTO short_url (id,  original_url,short_code, user_id)
      VALUES (722, :originalURL, :shortURL, 1);
 
 	
 	`;
 
-	let params = {
-		originalURL: postData.originalURL,
-		shortURL: postData.shortURL,
-	}       
-	
-	try {
-		const results = await database.query(createURL, params);
+  let params = {
+    originalURL: postData.originalURL,
+    shortURL: postData.shortURL,
+  };
 
-        console.log("Successfully recorded url");
-		console.log(results[0]);
-		return true;
-	}
-	catch(err) {
-		console.log("Error inserting user");
-        console.log(err);
-		return false;
-	}
+  try {
+    const results = await database.query(createURL, params);
+
+    console.log("Successfully recorded url");
+    console.log(results[0]);
+    return true;
+  } catch (err) {
+    console.log("Error inserting user");
+    console.log(err);
+    return false;
+  }
 }
 
 module.exports = { createURL };
-

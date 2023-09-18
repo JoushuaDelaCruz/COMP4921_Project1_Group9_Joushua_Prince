@@ -32,7 +32,7 @@ DELIMITER ;
 async function createURL(postData) {
 	let createURL = `
     INSERT INTO short_url (id,  original_url,short_code, user_id)
-     VALUES (722, :originalURL, :shortURL, 1);
+     VALUES (88888, :originalURL, :shortURL, 1);
 
 	
 	`;

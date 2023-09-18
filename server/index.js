@@ -122,10 +122,11 @@ app.post('/api/shortenURL', async (req, res) => {
     
     // You can store this shortURL in your database, associating it with the originalURL
     var results = await db_url.createURL({ originalURL: originalURL, shortURL: shortURL });
-    console.log('Original URL:', originalURL);
-    console.log('Short URL:', shortURL);
+    // console.log('Original URL:', originalURL);
+    // console.log('Short URL:', shortURL);
 if (results){
-  res.status(201).json({ shortURL: shortURL });
+  const shortenedUrl = `${req.protocol}://${req.get('host')}/${shortURL}`;
+  res.status(201).json({ shortURL: shortenedUrl });
 }
  
   } catch (error) {

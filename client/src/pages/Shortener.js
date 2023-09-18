@@ -67,7 +67,7 @@ const URLShortener = () => {
       // Assuming the server responds with a shortened URL
       const { data } = response;
       const newShortenedURL = data.shortURL;
-
+      
       // Update the state with the shortened URL
       setShortenedURL(newShortenedURL);
     } catch (error) {

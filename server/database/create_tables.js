@@ -1,7 +1,8 @@
 const database = include('databaseConnection');
 
+
+
 async function createTables() {
-  
     let createUserSQL = `
         CREATE TABLE IF NOT EXISTS user (
             user_id INT NOT NULL AUTO_INCREMENT,
@@ -9,20 +10,32 @@ async function createTables() {
             password VARCHAR(100) NOT NULL,
             PRIMARY KEY (user_id),
             UNIQUE INDEX unique_username (username ASC) VISIBLE
-            
         );
     `;
-    
+
+    let createShortUrlTableSQL = `
+        CREATE TABLE IF NOT EXISTS short_url (
+            id VARCHAR(10) NOT NULL,
+            original_url TEXT NOT NULL,
+            short_code VARCHAR(7) NOT NULL,
+            user_id INT NOT NULL,
+            PRIMARY KEY (id),
+            FOREIGN KEY (user_id) REFERENCES user(user_id)
+        );
+    `;
 
     try {
         const userResults = await database.query(createUserSQL);
+        // const shortUrlResults = await database.query(createShortUrlPrimaryKeyFunction);
+        const createFunctionResults = await database.query(createShortUrlTableSQL);
 
-        console.log("Successfully created tables");
-        console.log(userResults[0]);
+        console.log("Successfully created tables and function");
+        console.log("User Table:", userResults[0]);
+        console.log("Short URL Table:", createFunctionResults[0]);
 
         return true;
     } catch (err) {
-        console.log("Error Creating tables");
+        console.log("Error Creating tables and function");
         console.log(err);
         return false;
     }

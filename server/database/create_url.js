@@ -10,7 +10,7 @@ async function createURL(postData) {
   `;
   const shortCodeResult = await database.query(generateShortCodeQuery);
   const id = shortCodeResult[0][0].shortCode;
-  console.log( id)
+console.log(id)
 
 
 

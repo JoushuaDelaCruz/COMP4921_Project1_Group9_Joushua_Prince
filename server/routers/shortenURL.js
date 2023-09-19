@@ -29,19 +29,17 @@ router.post('/', async (req, res) => {
 
  // Ensure that the short URL starts with "http://"
  const shortURL = `${req.protocol}://${req.get('host')}/${shortcode}`;
- console.log(shortURL)
+ console.log("printing URL" + shortURL)
 
   // You can store this shortURL in your database, associating it with the originalURL
   var results = await db_url.createURL({ originalURL: fullUrl, shortURL: shortURL });
   if (results) {
+    console.log(results)
     console.log("recorded")
   }
 
-  // if (results){
-  //   const shortenedUrl = `${req.protocol}://${req.get('host')}/${shortURL}`;
-  //   res.status(201).json({ shortURL: shortenedUrl });
-  // }
-  
+
+ 
 
 });
 

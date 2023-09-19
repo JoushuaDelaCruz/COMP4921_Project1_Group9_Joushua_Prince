@@ -9,7 +9,6 @@ const app = express();
 const loginRouter = require("./routers/logIn");
 const signUpRouter = require("./routers/signUp");
 const shortenURLrouter = require("./routers/shortenURL");
-const urlShorteningRouter = require("./routers/urlShortening");
 const homeRouter = require("./routers/homepage");
 
 app.set("view engine", "ejs");

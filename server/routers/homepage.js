@@ -13,8 +13,9 @@ router.get("/", (req, res) => {
       shortenerClass: "active",
       textClass: "text-light",
     };
-    res.render("index", bundle);
-    return;
+
+    return res.redirect("/shortenURL");
+    
   }
   if (text) {
     const bundle = {

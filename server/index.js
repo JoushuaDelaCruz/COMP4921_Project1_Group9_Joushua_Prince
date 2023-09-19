@@ -49,6 +49,8 @@ app.use(
   })
 );
 
+// TODO implement login
+
 app.get("/", (req, res) => {
   res.redirect("/home");
 });

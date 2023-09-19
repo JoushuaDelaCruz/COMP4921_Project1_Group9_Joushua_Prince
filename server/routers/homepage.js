@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 
+// TODO Check if can use session for login
+
 router.get("/", (req, res) => {
   const { shortener, text } = req.query;
   const authenticated = req.session ? req.session.authenticated : false;
@@ -14,8 +16,9 @@ router.get("/", (req, res) => {
       textClass: "text-light",
     };
 
-    return res.redirect("/shortenURL");
-    
+
+    res.render("index", bundle);
+    return;
   }
   if (text) {
     const bundle = {

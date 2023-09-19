@@ -23,6 +23,9 @@ async function createTables() {
         PRIMARY KEY (id),
         FOREIGN KEY (user_id) REFERENCES user(user_id)
     );
+
+
+    id, user_id, text_submitted, number_of_texts, date_submitted_
 `;
 
 

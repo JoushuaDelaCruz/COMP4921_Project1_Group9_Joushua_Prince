@@ -15,7 +15,7 @@ async function createTables() {
     CREATE TABLE IF NOT EXISTS short_url (
         id VARCHAR(10) NOT NULL,
         original_url TEXT NOT NULL,
-        short_code VARCHAR(7) NOT NULL,
+        short_code VARCHAR(45) NOT NULL,
         user_id INT NOT NULL,
         datecreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         datelastvisited TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

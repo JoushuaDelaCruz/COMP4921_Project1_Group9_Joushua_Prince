@@ -9,6 +9,9 @@ const saltRounds = 12;
 const bcrypt = require("bcrypt");
 const bodyParser = require('body-parser');
 
+const db_url = include('database/create_url');
+
+const shortId = require('shortid')
 
 
 // Add a GET route for rendering the "shortenurl.ejs" template
@@ -22,15 +25,22 @@ router.post('/', async (req, res) => {
 
   const fullUrl = req.body.fullUrl; 
    // Generate a unique short ID using shortid
- const shortURL = shortId.generate();
+ const shortcode = shortId.generate();
+
+ // Ensure that the short URL starts with "http://"
+ const shortURL = `${req.protocol}://${req.get('host')}/${shortcode}`;
+ console.log(shortURL)
+
   // You can store this shortURL in your database, associating it with the originalURL
-  var results = await db_url.createURL({ originalURL: originalURL, shortURL: shortURL });
-  // console.log('Original URL:', originalURL);
-  // console.log('Short URL:', shortURL);
-  if (results){
-    const shortenedUrl = `${req.protocol}://${req.get('host')}/${shortURL}`;
-    res.status(201).json({ shortURL: shortenedUrl });
+  var results = await db_url.createURL({ originalURL: fullUrl, shortURL: shortURL });
+  if (results) {
+    console.log("recorded")
   }
+
+  // if (results){
+  //   const shortenedUrl = `${req.protocol}://${req.get('host')}/${shortURL}`;
+  //   res.status(201).json({ shortURL: shortenedUrl });
+  // }
   
 
 });

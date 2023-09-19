@@ -11,16 +11,20 @@ async function createTables() {
         );
     `;
 
-  let createShortUrlTableSQL = `
-        CREATE TABLE IF NOT EXISTS short_url (
-            id VARCHAR(10) NOT NULL,
-            original_url TEXT NOT NULL,
-            short_code VARCHAR(7) NOT NULL,
-            user_id INT NOT NULL,
-            PRIMARY KEY (id),
-            FOREIGN KEY (user_id) REFERENCES user(user_id)
-        );
-    `;
+    let createShortUrlTableSQL = `
+    CREATE TABLE IF NOT EXISTS short_url (
+        id VARCHAR(10) NOT NULL,
+        original_url TEXT NOT NULL,
+        short_code VARCHAR(7) NOT NULL,
+        user_id INT NOT NULL,
+        datecreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        datelastvisited TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        numofhits INT DEFAULT 0,
+        PRIMARY KEY (id),
+        FOREIGN KEY (user_id) REFERENCES user(user_id)
+    );
+`;
+
 
   try {
     const userResults = await database.query(createUserSQL);

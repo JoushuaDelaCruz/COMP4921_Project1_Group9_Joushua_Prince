@@ -17,17 +17,27 @@ router.get("/", (req, res) => {
  res.render("shortenURL")
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   console.log('Full URL submitted:');
 
   const fullUrl = req.body.fullUrl; 
-  
-  
-
+   // Generate a unique short ID using shortid
+ const shortURL = shortId.generate();
+  // You can store this shortURL in your database, associating it with the originalURL
+  var results = await db_url.createURL({ originalURL: originalURL, shortURL: shortURL });
+  // console.log('Original URL:', originalURL);
+  // console.log('Short URL:', shortURL);
+  if (results){
+    const shortenedUrl = `${req.protocol}://${req.get('host')}/${shortURL}`;
+    res.status(201).json({ shortURL: shortenedUrl });
+  }
   
 
 });
 
+
+
+    
 
 
 

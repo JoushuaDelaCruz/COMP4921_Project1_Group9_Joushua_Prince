@@ -16,7 +16,7 @@ const shortId = require('shortid')
 
 // Add a GET route for rendering the "shortenurl.ejs" template
 router.get("/", (req, res) => {
-  console.log("inside shorten")
+  // console.log("inside shorten")
  res.render("shortenURL")
 });
 

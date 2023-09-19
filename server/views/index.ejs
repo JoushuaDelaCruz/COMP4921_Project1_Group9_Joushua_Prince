@@ -1,2 +1,10 @@
-<%- include("templates/header") %>
+<%- include("templates/header", {additionalStyle: 'navbar.css', title: 'LinkMorpher'}) %>
+<%- include("templates/navbar") %>
+<% if (imageClass == "active") { %> 
+    <%- include("templates/imageUrls") %>
+ <% } else if  (textClass == "active") { %>
+    <%- include("templates/textUrls") %>
+ <% } else { %>
+    <%- include("templates/shortener") %>
+ <% }  %>
 <%- include("templates/footer") %>

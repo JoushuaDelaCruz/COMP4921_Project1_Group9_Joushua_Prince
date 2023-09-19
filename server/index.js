@@ -2,20 +2,22 @@ const express = require("express");
 require("./utils");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
-
+const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-const loginRouter = require("./routers/login");
+const loginRouter = require("./routers/logIn");
 const signUpRouter = require("./routers/signUp");
-const urlShorteningRouter = require("./routers/urlShortening");
+const shortenURLrouter = require("./routers/shortenURL");
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + "/public"));
-
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/login", loginRouter);
 app.use("/signup", signUpRouter);
+app.use("/shortenURL", shortenURLrouter);
+
 
 //** MongoDB Session */
 /* secret information section */

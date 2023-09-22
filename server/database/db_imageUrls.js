@@ -31,7 +31,7 @@ const uploadImage = async (data) => {
 
 const getUploadedImages = async () => {
   const imagesSQL = `
-    SELECT image_id, cloudinary_public_id, date_created, uploader_id, username, num_hits, date_last_visited
+    SELECT image_id, cloudinary_public_id, date_created, uploader_id, username, num_hits, date_last_visited, is_active
     FROM ImageUrls
     LEFT JOIN user on uploader_id = user_id
 	`;

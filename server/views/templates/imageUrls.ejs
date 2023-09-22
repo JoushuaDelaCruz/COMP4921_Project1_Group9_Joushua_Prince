@@ -19,7 +19,7 @@
         <!-- Uploaded image area-->
         <div class="image-area mt-4 w-100 h-50%">
             <img id="imageResult" alt="" class="rounded shadow-sm mx-auto d-block w-100 h-100"></div>
-        <div class="d-flex justify-content-center">
+        <div class="d-none justify-content-center" id="upload-button">
             <button class="btn btn-primary mt-5 px-5">
                 Upload
             </button>
@@ -38,6 +38,11 @@
 </main>
 
 <script>
+    const showUploadButton = () => {
+        const uploadButton = document.getElementById('upload-button');
+        uploadButton.classList.remove('d-none');
+        uploadButton.classList.add('d-flex');
+    }
 	const showFileName = () => {
         const input = document.getElementById('upload');
 	    const infoArea = document.getElementById('upload-label');
@@ -54,5 +59,6 @@
 			reader.readAsDataURL(input.files[0]);
 			}
             showFileName()
+            showUploadButton()
         }
   </script>

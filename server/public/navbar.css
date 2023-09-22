@@ -2,3 +2,14 @@
     background: #007bff;
     background: linear-gradient(to right, #0062E6, #33AEFF);
 }
+
+#upload {
+    opacity: 0;
+}
+
+#upload-label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+}

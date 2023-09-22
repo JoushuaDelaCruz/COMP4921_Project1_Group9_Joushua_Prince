@@ -2,8 +2,15 @@ require("../utils");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
+const db_imageUrl = include("database/db_imageUrls");
 
-router.get("/", (req, res) => {
+const getImages = async () => {
+  const images = await db_imageUrl.getUploadedImages();
+  console.log(images);
+  return images;
+};
+
+router.get("/", async (req, res) => {
   const { shortener, text } = req.query;
   const authenticated = req.session ? req.session.authenticated : false;
   if (shortener) {
@@ -15,7 +22,6 @@ router.get("/", (req, res) => {
     };
 
     return res.redirect("/shortenURL");
-    
   }
   if (text) {
     const bundle = {
@@ -27,7 +33,9 @@ router.get("/", (req, res) => {
     res.render("index", bundle);
     return;
   }
+  const images = await getImages();
   const bundle = {
+    images: images,
     isUserSignedIn: authenticated,
     imageClass: "active",
     shortenerClass: "text-light",

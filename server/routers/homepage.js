@@ -20,8 +20,8 @@ router.get("/", async (req, res) => {
       shortenerClass: "active",
       textClass: "text-light",
     };
-
-    return res.redirect("/shortenURL");
+    res.render("index", bundle);
+    return;
   }
   if (text) {
     const bundle = {

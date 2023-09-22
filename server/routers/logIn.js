@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 
 router.post("/user", async (req, res) => {
   const { username, password } = req.body;
-  // must check if username and password are valid in the database
+  
   res.redirect("/home");
 });
 

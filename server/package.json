@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js",
-    "client": "npm run start --prefix ../client",
-    "build": "cd client && npm install && npm run build",
-    "dev": "concurrently --kill-others-on-fail \" npm run server\" \"npm run client\""
+    "start": "node index.js"
   },
   "engines": {
     "node": "19.3.0"

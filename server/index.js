@@ -12,11 +12,10 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const imageRouter = require("./routers/imageUrl");
-const loginRouter = require("./routers/logIn");
 const signUpRouter = require("./routers/signUp");
 const shortenURLrouter = require("./routers/shortenURL");
 const homeRouter = require("./routers/homepage");
-const db_users = include('database/users');
+const db_users = include("database/users");
 
 // app.use("/login", loginRouter);
 app.use("/signup", signUpRouter);
@@ -24,8 +23,7 @@ app.use("/shortenURL", shortenURLrouter);
 app.use("/imageUrls", imageRouter);
 app.use("/home", homeRouter);
 
-
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const saltRounds = 12;
 const expireTime = 60 * 60 * 1000; //expires after 1 day  (hours * minutes * seconds * millis)
 
@@ -57,23 +55,28 @@ app.use(
   })
 );
 
-app.get('/login', (req, res) => {
-  const errorMessage = req.query.error;
-  res.render('login', { username: '', password: '' });
+app.get("/login", (req, res) => {
+  const invalid = req.query.invalid;
+  if (invalid) {
+    res.render("login", { invalid: "is-invalid" });
+    return;
+  }
+  res.render("login");
 });
 
-app.post('/login/user', async (req, res) => {
+app.post("/login/user", async (req, res) => {
   console.log(req.body);
   var user = req.body.username;
   var password = req.body.password;
   var results = await db_users.getUser({ user: user });
-  
+
   if (results) {
     console.log(results[0]);
   }
 
   if (results) {
-    if (results.length === 1) { // Ensure there is exactly one matching user
+    if (results.length === 1) {
+      // Ensure there is exactly one matching user
       const storedHashedPassword = results[0].password;
 
       // Compare the user-entered password with the stored hashed password
@@ -83,25 +86,22 @@ app.post('/login/user', async (req, res) => {
         req.session.user_id = results[0].user_id;
         req.session.cookie.maxAge = expireTime;
         console.log("Logging in: " + results[0].user_id);
-        res.redirect('/home')
+        res.redirect("/home");
+        return;
         // Handle the login success case here
       } else {
         console.log("Invalid password");
         // Handle the invalid password case here
       }
     } else {
-      console.log('Invalid number of users matched: ' + results.length + ' (expected 1).');
+      console.log(
+        "Invalid number of users matched: " + results.length + " (expected 1)."
+      );
       // Handle the case where multiple users match the query
     }
-  } else {
-    console.log('User not found');
-    // Handle the case where no user matches the query
   }
+  res.redirect("/login?invalid=true");
 });
-
-
-
-
 
 app.get("/", (req, res) => {
   res.redirect("/home");

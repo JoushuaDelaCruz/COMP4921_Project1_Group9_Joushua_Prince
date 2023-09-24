@@ -1,31 +1,32 @@
 <script type="text/javascript"> 
     $.cloudinary.config({ cloud_name: '<%= process.env.CLOUDINARY_CLOUD_NAME %>', secure: true});
 </script>
-
-<form action="/imageUrls/addContent" method="POST" enctype="multipart/form-data" class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-2 h-100% w-100% bg-opacity-75 border border-dark-subtle">
-    <div class="col-lg-6 mx-auto">
-
-        <!-- Upload image input-->
-        <div class="input-group mb-3 px-2 py-2 rounded-pill bg-dark shadow-sm">
-            <input id="upload" type="file" name="image" onchange="readURL(this);" class="form-control border-0">
-            <label id="upload-label" for="upload" class="font-weight-light text-light">Choose file</label>
-            <div class="input-group-append">
-                <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> 
-                <i class="fa-regular fa-image me-2 text-muted"></i>
-                <small class="text-uppercase font-weight-bold text-muted text-light">Choose file</small></label>
+<% if (isUserSignedIn) { %> 
+    <form action="/imageUrls/addContent" method="POST" enctype="multipart/form-data" class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-2 h-100% w-100% bg-opacity-75 border border-dark-subtle">
+        <div class="col-lg-6 mx-auto">
+    
+            <!-- Upload image input-->
+            <div class="input-group mb-3 px-2 py-2 rounded-pill bg-dark shadow-sm">
+                <input id="upload" type="file" name="image" onchange="readURL(this);" class="form-control border-0">
+                <label id="upload-label" for="upload" class="font-weight-light text-light">Choose file</label>
+                <div class="input-group-append">
+                    <label for="upload" class="btn btn-light m-0 rounded-pill px-4"> 
+                    <i class="fa-regular fa-image me-2 text-muted"></i>
+                    <small class="text-uppercase font-weight-bold text-muted text-light">Choose file</small></label>
+                </div>
+            </div>
+    
+            <!-- Uploaded image area-->
+            <div class="image-area mt-4 w-100 h-50%">
+                <img id="imageResult" alt="" class="rounded shadow-sm mx-auto d-block w-100 h-100"></div>
+            <div class="d-none justify-content-center" id="upload-button">
+                <button class="btn btn-primary mt-5 px-5">
+                    Upload
+                </button>
             </div>
         </div>
-
-        <!-- Uploaded image area-->
-        <div class="image-area mt-4 w-100 h-50%">
-            <img id="imageResult" alt="" class="rounded shadow-sm mx-auto d-block w-100 h-100"></div>
-        <div class="d-none justify-content-center" id="upload-button">
-            <button class="btn btn-primary mt-5 px-5">
-                Upload
-            </button>
-        </div>
-    </div>
-</form>
+    </form>
+ <% } %>
 
 <main class="container-fluid py-5">
     <h1 class="my-4"> Contents </h1>

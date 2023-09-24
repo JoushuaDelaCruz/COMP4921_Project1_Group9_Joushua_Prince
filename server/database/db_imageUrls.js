@@ -54,7 +54,16 @@ const uploadImage = async (data) => {
 
 const getUploadedImages = async () => {
   const imagesSQL = `
-    SELECT image_id, cloudinary_public_id, date_created, uploader_id, username, num_hits, last_date_visited, is_active
+    SELECT 
+      image_id, 
+      cloudinary_public_id, 
+      date_created, 
+      uploader_id, 
+      username, 
+      num_hits, 
+      last_date_visited, 
+      is_active, 
+      ui.url_info_id
     FROM ImageUrls as image
     LEFT JOIN user on uploader_id = user_id
     LEFT JOIN urls_info as ui on ui.url_info_id = image.url_info_id
@@ -123,4 +132,55 @@ const imageClicked = async (url_info_id) => {
   }
 };
 
-module.exports = { uploadImage, getUploadedImages, getImage, imageClicked };
+const deactivateImage = async (url_info_id) => {
+  const deactivateSQL = `
+  UPDATE urls_info 
+  SET is_active = 0
+  WHERE url_info_id = :url_info_id;`;
+
+  const params = {
+    url_info_id: url_info_id,
+  };
+
+  try {
+    const results = await database.query(deactivateSQL, params);
+    console.log("Successfully deactivated image");
+    console.log(results[0]);
+    return true;
+  } catch (err) {
+    console.log("Error failed to deactivate image");
+    console.log(err);
+    return false;
+  }
+};
+
+const activateImage = async (url_info_id) => {
+  const activateSQL = `
+  UPDATE urls_info 
+  SET is_active = 1
+  WHERE url_info_id = :url_info_id;`;
+
+  const params = {
+    url_info_id: url_info_id,
+  };
+
+  try {
+    const results = await database.query(activateSQL, params);
+    console.log("Successfully activated image");
+    console.log(results[0]);
+    return true;
+  } catch (err) {
+    console.log("Error failed to activate image");
+    console.log(err);
+    return false;
+  }
+};
+
+module.exports = {
+  uploadImage,
+  getUploadedImages,
+  getImage,
+  imageClicked,
+  deactivateImage,
+  activateImage,
+};

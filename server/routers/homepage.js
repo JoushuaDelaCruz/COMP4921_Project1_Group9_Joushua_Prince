@@ -51,14 +51,5 @@ router.get("/", async (req, res) => {
   return;
 });
 
-// router.post("/login/user", async (req, res) => {
-//   const { username, password } = req.body;
-//   // console.log("Username:", username);
-//   // console.log("Password:", password);
-//   // console.log("Checking user");
-//   // console.log(req.body)
-
-//   res.redirect("/home");
-// });
 
 module.exports = router;

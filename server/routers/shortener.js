@@ -4,7 +4,7 @@ const router = express.Router();
 const database = include("mySQLDatabaseConnection");
 const db_utils = include("database/db_utils");
 const db_users = include("database/users");
-const db_geturl = include("database/get_urls");
+const db_geturl = include("database/getOriginalURL");
 
 const nodeCache = require("node-cache");
 const saltRounds = 12;

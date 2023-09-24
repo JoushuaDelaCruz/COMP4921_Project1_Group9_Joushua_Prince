@@ -19,7 +19,7 @@ const db_users = include("database/users");
 
 // app.use("/login", loginRouter);
 app.use("/signup", signUpRouter);
-app.use("/shortenURL", shortenURLrouter);
+app.use("/shortener", shortenURLrouter);
 app.use("/imageUrls", imageRouter);
 app.use("/home", homeRouter);
 

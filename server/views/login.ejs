@@ -8,12 +8,24 @@
           <h2 class="card-title text-center mb-5 fw-normal fs-6 text-body-secondary">Login to you LinkMorpher Account</h2>
           <form action="/login/user" method="post">
             <div class="form-floating mb-3">
-              <input type="text" class="form-control <%= username %>" name="username" placeholder="Username" required>
+              <input type="text" name="username" placeholder="Username" 
+              class="form-control 
+              <% if (locals.invalid) { %> 
+                <%= invalid %>"
+             <% } %>" required>
               <label for="floatingInput">Username</label>
             </div>
             <div class="form-floating mb-3">
-              <input type="password" class="form-control <%= password %>" name="password" placeholder="Password" required>
+              <input type="password" name="password" placeholder="Password" class="form-control 
+              <% if (locals.invalid) { %> 
+                <%= invalid %>"
+             <% } %>" required>
               <label for="floatingPassword">Password</label>
+              <% if (locals.invalid) { %> 
+                <div class="invalid-feedback p-2 text-center fw-semibold">
+                    Username or Password is incorrect. Please try again.
+                </div>
+            <% } %> 
             </div>
             <div class="d-grid">
               <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Login</button>
@@ -21,6 +33,9 @@
             <hr class="my-4">
             <div class="mb-3">
               <h3 class="text-center fw-semibold fs-6 text-primary-emphasis"> Don't have an account? <a href="./signUp"> Sign Up </a> </h3>
+            </div>
+            <div class="d-grid mx-auto my-auto col-6">
+              <a href="/home" class="btn btn-info"> Go Back </a>
             </div>
           </form>
         </div>

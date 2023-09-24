@@ -27,7 +27,7 @@ async function createUser(postData) {
   }
 }
 
-async function getUsers(postData) {
+async function getUser(postData) {
   console.log("Checking users in database" + postData);
   console.log(postData);
   let getUsersSQL = `
@@ -53,4 +53,4 @@ async function getUsers(postData) {
   }
 }
 
-module.exports = { createUser, getUsers };
+module.exports = { createUser, getUser };

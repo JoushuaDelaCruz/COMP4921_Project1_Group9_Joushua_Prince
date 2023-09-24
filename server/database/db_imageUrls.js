@@ -63,8 +63,8 @@ const getUploadedImages = async () => {
   try {
     const results = await database.query(imagesSQL);
 
-    console.log("Successfully retrieves all uploaded images");
-    console.log(results[0]);
+    // console.log("Successfully retrieves all uploaded images");
+    // console.log(results[0]);
     return results[0];
   } catch (err) {
     console.log("Error failed to retrieve uploaded images");

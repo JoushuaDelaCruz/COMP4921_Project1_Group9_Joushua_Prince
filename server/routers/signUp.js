@@ -87,7 +87,7 @@ router.post("/createUser", async (req, res) => {
     if (success) {
       console.log("User created successfully");
       res.status(200).json({ message: "User created successfully" });
-      res.redirect("/login");
+      res.render("/login");
     } else {
       console.error("YIkes Failed to create user");
       res.status(500).json({ error: "Failed to create user" });

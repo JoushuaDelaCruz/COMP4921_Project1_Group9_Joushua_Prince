@@ -2,7 +2,14 @@ require("../utils");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
+const app = express();
+const bodyParser = require("body-parser");
+
 const db_imageUrl = include("database/db_imageUrls");
+// / Middleware to parse JSON and URL-encoded request bodies
+app.use(bodyParser.json()); // Parse JSON bodies
+app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
+
 
 const getImages = async () => {
   const images = await db_imageUrl.getUploadedImages();
@@ -44,10 +51,14 @@ router.get("/", async (req, res) => {
   return;
 });
 
-router.post("/user", async (req, res) => {
-  const { username, password } = req.body;
-  // must check if username and password are valid in the database
-  res.redirect("/home");
-});
+// router.post("/login/user", async (req, res) => {
+//   const { username, password } = req.body;
+//   // console.log("Username:", username);
+//   // console.log("Password:", password);
+//   // console.log("Checking user");
+//   // console.log(req.body)
+
+//   res.redirect("/home");
+// });
 
 module.exports = router;

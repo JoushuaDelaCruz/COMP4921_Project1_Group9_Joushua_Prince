@@ -12,7 +12,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const bcrypt = require("bcrypt");
 const expireTime = 60 * 60 * 1000; //expires after 1 day  (hours * minutes * seconds * millis)
 
 //** MongoDB Session */

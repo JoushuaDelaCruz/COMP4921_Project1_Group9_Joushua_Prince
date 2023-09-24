@@ -2,8 +2,6 @@ require("../utils");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const database = include("mySQLDatabaseConnection");
-const db_utils = include("database/db_utils");
 const db_users = include("database/users");
 const nodeCache = require("node-cache");
 const saltRounds = 12;
@@ -59,9 +57,8 @@ router.post("/createUser", async (req, res) => {
       userInvalidMessage = "Please enter your username";
       return true;
     }
-
     const userExists = db_users.getUser({ user: username });
-    if (userExists) {
+    if (userExists.length <= 0) {
       userValidClass = "is-invalid";
       userInvalidMessage = "Username already exists";
       return true;
@@ -92,15 +89,14 @@ router.post("/createUser", async (req, res) => {
     });
     if (success) {
       console.log("User created successfully");
-      res.status(200).json({ message: "User created successfully" });
-      res.render("/login");
+      res.redirect("/login");
     } else {
       console.error("YIkes Failed to create user");
-      res.status(500).json({ error: "Failed to create user" });
+      res.redirect("/signUp");
     }
   } catch (error) {
     console.error("Error while creating user:", error);
-    res.status(500).json({ error: "Failed to create user" });
+    res.redirect("/signUp");
   }
 });
 

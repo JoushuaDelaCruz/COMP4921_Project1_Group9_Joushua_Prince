@@ -32,8 +32,8 @@
       <h6 class="card-subtitle mb-2 text-body-secondary">Created at: <%- image.date_created %> </h6>
       <p class="card-text"><small class="text-body-secondary">Number of hits: <%- image.num_hits %> </small></p>
       <div class="card-footer wv-100">
-        <% if (image.date_last_visited){ %>
-          <small class="text-body-secondary">Last visited: <%- image.date_last_visited %> </small>
+        <% if (image.last_date_visited){ %>
+          <small class="text-body-secondary">Last visited: <%- image.last_date_visited %> </small>
         <% } %>
         <% if (image.uploader_id === userSignedIn){ %>
           <form action="/imageUrls/activate" class="d-flex justify-content-center my-3" method="POST">

@@ -23,19 +23,19 @@ router.get("/:image", async (req, res) => {
   const image_id = req.params.image;
   const imageData = await db_imageUrl.getImage(image_id);
   const user_id = req.session ? req.session.user_id : -1;
-  if (!imageData) {
+  if (!imageData[0]) {
     res.send("/404");
     return;
   }
-  if (imageData.is_active === 0 && imageData.uploader_id !== user_id) {
+  const uploader_id = imageData[0].uploader_id;
+  const owner = uploader_id === user_id;
+  if (imageData[0].is_active === 0 && imageData[0].uploader_id !== user_id) {
     res.render("inactive");
     return;
   }
-  if (imageData.uploader_id === user_id) {
-    Array.prototype.push.call(imageData, { owner: true });
-  }
-  await db_imageUrl.imageClicked(imageData.url_info_id);
-  res.render("image", imageData);
+  imageData[0].owner = owner;
+  await db_imageUrl.imageClicked(imageData[0].url_info_id);
+  res.render("image", imageData[0]);
 });
 
 router.post("/addContent", upload.single("image"), async (req, res) => {

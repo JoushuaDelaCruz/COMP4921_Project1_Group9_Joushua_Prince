@@ -2,8 +2,8 @@
     $.cloudinary.config({ cloud_name: '<%= process.env.CLOUDINARY_CLOUD_NAME %>', secure: true});
 </script>
 <% if (isUserSignedIn) { %> 
-    <form action="/imageUrls/addContent" method="POST" enctype="multipart/form-data" class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-2 h-100% w-100% bg-opacity-75 border border-dark-subtle">
-        <div class="col-lg-6 mx-auto">
+    <form action="/imageUrls/addContent" method="POST" enctype="multipart/form-data" class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-2 bg-opacity-75 border border-dark-subtle">
+        <div class="col-lg-6 mx-auto" style="max-height: 25%;">
     
             <!-- Upload image input-->
             <div class="input-group mb-3 px-2 py-2 rounded-pill bg-dark shadow-sm">
@@ -17,8 +17,8 @@
             </div>
     
             <!-- Uploaded image area-->
-            <div class="image-area mt-4 w-100 h-50%">
-                <img id="imageResult" alt="" class="rounded shadow-sm mx-auto d-block w-100 h-100"></div>
+            <div class="image-area mt-4">
+                <img id="imageResult" alt="" class="img-thumbnail rounded mx-auto d-block shadow-sm" style="max-height: 30rem;"></div>
             <div class="d-none justify-content-center" id="upload-button">
                 <button class="btn btn-primary mt-5 px-5">
                     Upload
@@ -28,7 +28,7 @@
     </form>
  <% } %>
 
-<main class="container-fluid py-5">
+<main class="container-fluid py-5" style="max-height: 75%">
     <h1 class="my-4"> Contents </h1>
     <section class="d-flex flex-row justify-content-center align-self-center flex-wrap column-gap-3 row-gap-4">
         <% if (locals.images) {%>

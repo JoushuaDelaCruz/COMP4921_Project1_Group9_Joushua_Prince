@@ -59,7 +59,13 @@ router.post("/createUser", async (req, res) => {
       userInvalidMessage = "Please enter your username";
       return true;
     }
-    // check if a same username exists in the database
+
+    const userExists = db_users.getUser({ user: username });
+    if (userExists) {
+      userValidClass = "is-invalid";
+      userInvalidMessage = "Username already exists";
+      return true;
+    }
     return false;
   };
 

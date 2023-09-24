@@ -6,7 +6,6 @@ const db_imageUrl = include("database/db_imageUrls");
 
 const getImages = async () => {
   const images = await db_imageUrl.getUploadedImages();
-  console.log(images);
   return images;
 };
 

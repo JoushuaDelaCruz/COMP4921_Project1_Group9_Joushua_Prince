@@ -2,10 +2,14 @@ require("../utils");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
+const db_imageUrl = include("database/db_imageUrls");
 
-// TODO Check if can use session for login
+const getImages = async () => {
+  const images = await db_imageUrl.getUploadedImages();
+  return images;
+};
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   const { shortener, text } = req.query;
   const authenticated = req.session ? req.session.authenticated : false;
   if (shortener) {
@@ -15,8 +19,6 @@ router.get("/", (req, res) => {
       shortenerClass: "active",
       textClass: "text-light",
     };
-
-
     res.render("index", bundle);
     return;
   }
@@ -30,7 +32,9 @@ router.get("/", (req, res) => {
     res.render("index", bundle);
     return;
   }
+  const images = await getImages();
   const bundle = {
+    images: images,
     isUserSignedIn: authenticated,
     imageClass: "active",
     shortenerClass: "text-light",

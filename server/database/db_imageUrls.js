@@ -99,8 +99,8 @@ const getImage = async (image_id) => {
     const results = await database.query(imageSQL, param);
 
     console.log("Successfully retrieves image");
-    console.log(results[0][0]);
-    return results[0][0];
+    console.log(results[0]);
+    return results[0];
   } catch (err) {
     console.log("Error failed to retrieve image");
     console.log(err);

@@ -10,7 +10,6 @@ const db_imageUrl = include("database/db_imageUrls");
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-
 const getImages = async () => {
   const images = await db_imageUrl.getUploadedImages();
   return images;
@@ -51,14 +50,10 @@ router.get("/", async (req, res) => {
   return;
 });
 
-// router.post("/login/user", async (req, res) => {
-//   const { username, password } = req.body;
-//   // console.log("Username:", username);
-//   // console.log("Password:", password);
-//   // console.log("Checking user");
-//   // console.log(req.body)
-
-//   res.redirect("/home");
-// });
+router.post("/logOut", (req, res) => {
+  console.log("Logging out");
+  req.session.destroy();
+  res.redirect("/");
+});
 
 module.exports = router;

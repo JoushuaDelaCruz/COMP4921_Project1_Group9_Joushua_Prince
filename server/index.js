@@ -47,56 +47,13 @@ const imageRouter = require("./routers/imageUrl");
 const signUpRouter = require("./routers/signUp");
 const shortenURLrouter = require("./routers/shortenURL");
 const homeRouter = require("./routers/homepage");
-const db_users = include("database/users");
+const loginRouter = require("./routers/logIn");
 
-// app.use("/login", loginRouter);
+app.use("/login", loginRouter);
 app.use("/signup", signUpRouter);
 app.use("/shortenURL", shortenURLrouter);
 app.use("/imageUrls", imageRouter);
 app.use("/home", homeRouter);
-
-app.get("/login", (req, res) => {
-  const invalid = req.query.invalid;
-  if (invalid) {
-    res.render("login", { invalid: "is-invalid" });
-    return;
-  }
-  res.render("login");
-});
-
-app.post("/login/user", async (req, res) => {
-  console.log(req.body);
-  var user = req.body.username;
-  var password = req.body.password;
-  var results = await db_users.getUser({ user: user });
-
-  if (results) {
-    if (results.length === 1) {
-      // Ensure there is exactly one matching user
-      const storedHashedPassword = results[0].password;
-
-      // Compare the user-entered password with the stored hashed password
-      if (bcrypt.compareSync(password, storedHashedPassword)) {
-        req.session.authenticated = true;
-        req.session.user = results[0].username;
-        req.session.user_id = results[0].user_id;
-        req.session.cookie.maxAge = expireTime;
-        res.redirect("/home");
-        return;
-        // Handle the login success case here
-      } else {
-        console.log("Invalid password");
-        // Handle the invalid password case here
-      }
-    } else {
-      console.log(
-        "Invalid number of users matched: " + results.length + " (expected 1)."
-      );
-      // Handle the case where multiple users match the query
-    }
-  }
-  res.redirect("/login?invalid=true");
-});
 
 app.get("/", (req, res) => {
   res.redirect("/home");

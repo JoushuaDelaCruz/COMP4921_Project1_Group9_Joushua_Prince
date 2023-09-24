@@ -16,7 +16,9 @@
         <% if (isUserSignedIn) { %> 
             <ul class="nav justify-content-end">
                 <li class="nav-item">
-                    <a class="btn nav-link active fw-medium text-dark" aria-current="page" href="/home/logout">Log Out</a>
+                    <form action="/home/logOut" method="POST">
+                        <button class="btn nav-link active fw-medium text-dark" aria-current="page" type="submit">Log Out</button>
+                    </form>
                   </li>
             </ul>
          <% } else {%>

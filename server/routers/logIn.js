@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const db_users = include("database/users");
+const bcrypt = require("bcrypt");
+const expireTime = 60 * 60 * 1000; //expires after 1 day  (hours * minutes * seconds * millis)
 
 router.get("/", (req, res) => {
   const invalid = req.query.invalid;

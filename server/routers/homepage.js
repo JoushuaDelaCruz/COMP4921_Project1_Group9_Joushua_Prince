@@ -45,6 +45,7 @@ router.get("/", async (req, res) => {
     imageClass: "active",
     shortenerClass: "text-light",
     textClass: "text-light",
+    userSignedIn: req.session ? req.session.user_id : -1,
   };
   res.render("index", bundle);
   return;

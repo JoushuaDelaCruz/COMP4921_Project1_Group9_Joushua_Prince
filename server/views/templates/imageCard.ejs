@@ -1,6 +1,6 @@
 <% if (image.is_active === 1){ %>
   <a href="/imageUrls/<%- image.image_id %>" class="link-underline link-underline-opacity-0">
-    <div class="card border-primary" style="width: 18rem; max-height: 35rem;">
+    <div class="card border-success" style="width: 18rem; max-height: 35rem;">
         <div class="bg-image w-100 h-50 hover-overlay ripple">
           <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', {class: "card-img-top img-fluid w-100 h-100"}).toHtml());</script>
         </div>
@@ -12,7 +12,7 @@
             <% if (image.last_date_visited){ %>
               <small class="text-body-secondary">Last visited: <%- image.last_date_visited %> </small>
             <% } %>
-            <% if (image.last_date_visited){ %>
+            <% if (image.uploader_id === userSignedIn){ %>
               <form action="/imageUrls/deactivate" class="d-flex justify-content-center my-3" method="POST">
                 <input type="hidden" name="url_info_id" value="<%= image.url_info_id %>"/>
                 <button class="btn btn-success"> Deactivate </button>
@@ -23,18 +23,24 @@
     </div>
   </a>
 <% } else { %>
-  <div class="card border-primary" style="width: 18rem; height: 30rem;">
-    <div class="w-100 h-50">
-      <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', {class: "card-img-top w-100 h-100"}).toHtml());</script>
+  <div class="card border-secondary" style="width: 18rem; max-height: 35rem;">
+    <div class="bg-image w-100 h-50">
+      <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', {class: "card-img-top img-fluid w-100 h-100"}).toHtml());</script>
     </div>
     <div class="card-body">
       <h5 class="card-title">Author: <%- image.username %> </h5>
       <h6 class="card-subtitle mb-2 text-body-secondary">Created at: <%- image.date_created %> </h6>
       <p class="card-text"><small class="text-body-secondary">Number of hits: <%- image.num_hits %> </small></p>
       <div class="card-footer wv-100">
-        <% if (image.date_last_visited != "Invalid Date"){ %>
+        <% if (image.date_last_visited){ %>
           <small class="text-body-secondary">Last visited: <%- image.date_last_visited %> </small>
-      <% } %>
+        <% } %>
+        <% if (image.uploader_id === userSignedIn){ %>
+          <form action="/imageUrls/activate" class="d-flex justify-content-center my-3" method="POST">
+            <input type="hidden" name="url_info_id" value="<%= image.url_info_id %>"/>
+            <button class="btn btn-success"> Activate </button>
+          </form>
+        <% } %>
       </div>
     </div>
   </div>

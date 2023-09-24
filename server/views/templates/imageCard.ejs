@@ -11,11 +11,13 @@
           <div class="card-footer wv-100">
             <% if (image.last_date_visited){ %>
               <small class="text-body-secondary">Last visited: <%- image.last_date_visited %> </small>
-          <% } %>
-              <form action="/imageUrls/deactivate" class="my-2" method="POST">
+            <% } %>
+            <% if (image.last_date_visited){ %>
+              <form action="/imageUrls/deactivate" class="d-flex justify-content-center my-3" method="POST">
                 <input type="hidden" name="url_info_id" value="<%= image.url_info_id %>"/>
                 <button class="btn btn-success"> Deactivate </button>
               </form>
+            <% } %>
           </div>
         </div>
     </div>

@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
     console.log(results);
     console.log("recorded");
     const shortURLnew = `${req.protocol}://${req.get("host")}/${shortcode}`;
-    res.render("shortener", { shortURL: shortURLnew , fullUrl:fullUrl});
+    res.redirect("home?shortener=true", { shortURL: shortURLnew , fullUrl:fullUrl});
     console.log("full URL" + shortURLnew)
 
   }

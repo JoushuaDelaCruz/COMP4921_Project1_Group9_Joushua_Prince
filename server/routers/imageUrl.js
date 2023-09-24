@@ -22,7 +22,7 @@ const upload = multer({ storage: storage });
 router.get("/:image", async (req, res) => {
   const image_id = req.params.image;
   const imageData = await db_imageUrl.getImage(image_id);
-  const user_id = req.session ? req.session.user_id : 1;
+  const user_id = req.session ? req.session.user_id : -1;
   if (!imageData) {
     res.send("/404");
     return;
@@ -32,7 +32,7 @@ router.get("/:image", async (req, res) => {
     return;
   }
   if (imageData.uploader_id === user_id) {
-    imageData.push("owner", true);
+    Array.prototype.push.call(imageData, { owner: true });
   }
   await db_imageUrl.imageClicked(imageData.url_info_id);
   res.render("image", imageData);
@@ -45,7 +45,7 @@ router.post("/addContent", upload.single("image"), async (req, res) => {
   const buffer = req.file.buffer.toString("base64");
   const image = "data:image/png;base64," + buffer;
   cloudinary.uploader.upload(image).then(async (response) => {
-    const uploader_id = 8;
+    const uploader_id = req.session.user_id;
     const image_id = shortId.generate();
     const public_id = response.public_id;
     const uploadData = {
@@ -57,6 +57,18 @@ router.post("/addContent", upload.single("image"), async (req, res) => {
     res.redirect("/home?image=true");
     return;
   });
+});
+
+router.post("/deactivate", async (req, res) => {
+  const url_info_id = req.body.url_info_id;
+  await db_imageUrl.deactivateImage(url_info_id);
+  res.redirect("/home");
+});
+
+router.post("/activate", async (req, res) => {
+  const url_info_id = req.body.url_info_id;
+  await db_imageUrl.activateImage(url_info_id);
+  res.redirect("/home");
 });
 
 module.exports = router;

@@ -44,7 +44,7 @@ app.use(
 
 const imageRouter = require("./routers/imageUrl");
 const signUpRouter = require("./routers/signUp");
-const shortenURLrouter = require("./routers/shortenURL");
+const shortenURLrouter = require("./routers/shortener");
 const homeRouter = require("./routers/homepage");
 const loginRouter = require("./routers/logIn");
 

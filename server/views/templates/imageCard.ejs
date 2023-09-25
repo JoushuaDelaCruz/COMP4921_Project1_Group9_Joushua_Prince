@@ -1,40 +1,49 @@
-
-<a href="/imageUrls/<%- image.image_id %>" class="link-underline link-underline-opacity-0 
-  <% if (image.is_active === 0) { %> 
-  <%= 'disabled' %>"
-  <% } %>">
-  <div style="width: 18rem" class="card 
-  <% if (image.is_active === 0) { %> 
-    'border-secondary'
-  <% } else {%>
-    'border-success'
-  <% }%>">
-      <div class="bg-image w-100 h-50 hover-overlay ripple">
-        <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', 
-         {class: "card-img-top img-thumbnail rounded mx-auto d-block", style:"max-height: 20rem"}).toHtml());</script>
-      </div>
-      <div class="card-body">
-        <h5 class="card-title">Author: <%- image.username %> </h5>
-        <h6 class="card-subtitle mb-2 text-body-secondary">Created at: <%- image.date_created %> </h6>
-        <p class="card-text"><small class="text-body-secondary">Number of hits: <%- image.num_hits %> </small></p>
-        <div class="card-footer wv-100">
-          <% if (image.last_date_visited){ %>
-            <small class="text-body-secondary">Last visited: <%- image.last_date_visited %> </small>
-          <% } %>
-          <% if (image.uploader_id === userSignedIn){ %>
-            <% if (image.is_active === 0) { %> 
-              <form action="/imageUrls/activate" class="d-flex justify-content-center my-3" method="POST">
-                <input type="hidden" name="url_info_id" value="<%= image.url_info_id %>"/>
-                <button class="btn btn-success"> Activate </button>
-              </form>
-            <% } else {%>
+<% if (image.is_active === 1){ %>
+  <a href="/imageUrls/<%- image.image_id %>" class="link-underline link-underline-opacity-0">
+    <div class="card border-success" style="width: 18rem">
+        <div class="bg-image w-100 hover-overlay ripple">
+          <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', 
+          {class: "card-img-top img-thumbnail rounded mx-auto d-block", style:"max-height: 20rem"}).toHtml());</script>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Author: <%- image.username %> </h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary">Created at: <%- image.date_created %> </h6>
+          <p class="card-text"><small class="text-body-secondary">Number of hits: <%- image.num_hits %> </small></p>
+          <div class="card-footer wv-100">
+            <% if (image.last_date_visited){ %>
+              <small class="text-body-secondary">Last visited: <%- image.last_date_visited %> </small>
+            <% } %>
+            <% if (image.uploader_id === userSignedIn){ %>
               <form action="/imageUrls/deactivate" class="d-flex justify-content-center my-3" method="POST">
                 <input type="hidden" name="url_info_id" value="<%= image.url_info_id %>"/>
                 <button class="btn btn-success"> Deactivate </button>
               </form>
-            <% }%>
-          <% } %>
+            <% } %>
+          </div>
         </div>
+    </div>
+  </a>
+<% } else { %>
+  <div class="card border-secondary" style="width: 18rem">
+    <div class="bg-image w-100">
+      <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', 
+      {class: "card-img-top img-thumbnail rounded mx-auto d-block", style:"max-height: 20rem"}).toHtml());</script>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Author: <%- image.username %> </h5>
+      <h6 class="card-subtitle mb-2 text-body-secondary">Created at: <%- image.date_created %> </h6>
+      <p class="card-text"><small class="text-body-secondary">Number of hits: <%- image.num_hits %> </small></p>
+      <div class="card-footer wv-100">
+        <% if (image.last_date_visited){ %>
+          <small class="text-body-secondary">Last visited: <%- image.last_date_visited %> </small>
+        <% } %>
+        <% if (image.uploader_id === userSignedIn){ %>
+          <form action="/imageUrls/activate" class="d-flex justify-content-center my-3" method="POST">
+            <input type="hidden" name="url_info_id" value="<%= image.url_info_id %>"/>
+            <button class="btn btn-success"> Activate </button>
+          </form>
+        <% } %>
       </div>
+    </div>
   </div>
-</a>
+<% } %>

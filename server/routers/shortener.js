@@ -14,11 +14,14 @@ const bodyParser = require("body-parser");
 const db_url = include("database/create_url");
 
 const shortId = require("shortid");
+const { Table } = require("@material-ui/core");
 
 // Add a GET route for rendering the "shortenurl.ejs" template
 router.get("/", (req, res) => {
   console.log("inside shorten");
   res.render("shortener");
+  const shortcode = req.params.shortcode;
+  console.log("Shortening" + shortcode)
 });
 
 
@@ -43,7 +46,8 @@ router.post("/", async (req, res) => {
   if (results) {
     console.log(results);
     console.log("recorded");
-    const shortURLnew = `${req.protocol}://${req.get("host")}/${shortcode}`;
+    // const shortURLnew = `${req.protocol}://${req.get("host")}/${shortcode}`;
+    const shortURLnew = `${shortcode}`;
 
     res.render("shortener", { shortURL: shortURLnew , fullUrl:fullUrl});
     console.log("full URL" + shortURLnew)
@@ -64,6 +68,8 @@ router.get("/:shortcode", async (req, res) => {
 
   if (originalURL) {
     // Redirect to the original URL
+    // increment url click inside urls 
+    // render number of clicks to table in the page
     res.redirect(originalURL);
   } else {
     // Handle the case where the shortcode doesn't exist

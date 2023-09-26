@@ -1,7 +1,7 @@
 const database = include("mySQLDatabaseConnection");
 
 
-const getUploadedImages = async () => {
+const getOriginalURL = async () => {
     const urlSQL = `
       SELECT original_url
       FROM short_url 
@@ -21,3 +21,5 @@ const getUploadedImages = async () => {
       return;
     }
   };
+
+  module.exports = { getOriginalURL };

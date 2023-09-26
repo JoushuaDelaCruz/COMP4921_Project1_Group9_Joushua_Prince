@@ -44,8 +44,12 @@ router.post("/", async (req, res) => {
     console.log(results);
     console.log("recorded");
     const shortURLnew = `${req.protocol}://${req.get("host")}/${shortcode}`;
+
     res.render("shortener", { shortURL: shortURLnew , fullUrl:fullUrl});
     console.log("full URL" + shortURLnew)
+    // Look up the original URL associated with the shortcode in your database
+
+
 
   }
 });
@@ -56,6 +60,7 @@ router.get("/:shortcode", async (req, res) => {
 
   // Look up the original URL associated with the shortcode in your database
   const originalURL = await db_url.getOriginalURL(shortcode);
+  console.log("original url" + originalURL)
 
   if (originalURL) {
     // Redirect to the original URL
@@ -65,5 +70,8 @@ router.get("/:shortcode", async (req, res) => {
     res.status(404).send("Short URL not found");
   }
 });
+
+
+
 
 module.exports = router;

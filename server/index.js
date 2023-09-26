@@ -50,13 +50,15 @@ const loginRouter = require("./routers/logIn");
 
 app.use("/login", loginRouter);
 app.use("/signup", signUpRouter);
-app.use("/shortenURL", shortenURLrouter);
+app.use("/shortener", shortenURLrouter);
 app.use("/imageUrls", imageRouter);
 app.use("/home", homeRouter);
 
 app.get("/", (req, res) => {
   res.redirect("/home");
 });
+
+
 
 app.get("*", (req, res) => {
   res.status(404).render("404");

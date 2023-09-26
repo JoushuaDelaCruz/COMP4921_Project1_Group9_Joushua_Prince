@@ -4,15 +4,13 @@ const router = express.Router();
 const database = include("mySQLDatabaseConnection");
 const db_utils = include("database/db_utils");
 const db_users = include("database/users");
-const db_geturl = include("database/getOriginalURL");
+const db_shortener = include("database/db_shortener");
+
 
 const nodeCache = require("node-cache");
 const saltRounds = 12;
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
-
-const db_url = include("database/create_url");
-
 const shortId = require("shortid");
 const { Table } = require("@material-ui/core");
 
@@ -39,7 +37,7 @@ router.post("/", async (req, res) => {
   console.log("printing URL" + shortURL);
 
   // You can store this shortURL in your database, associating it with the originalURL
-  var results = await db_url.createURL({
+  var results = await db_shortener.createURL({
     originalURL: fullUrl,
     shortURL: shortURL,
   });
@@ -63,7 +61,7 @@ router.get("/:shortcode", async (req, res) => {
   const shortcode = req.params.shortcode;
 
   // Look up the original URL associated with the shortcode in your database
-  const originalURL = await db_url.getOriginalURL(shortcode);
+  const originalURL = await db_shortener.getOriginalURL(shortcode);
   console.log("original url" + originalURL)
 
   if (originalURL) {

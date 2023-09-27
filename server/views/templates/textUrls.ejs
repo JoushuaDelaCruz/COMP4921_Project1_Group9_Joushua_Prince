@@ -1,1 +1,23 @@
-<h1> TextUrls </h1>
+<div class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-5 bg-opacity-75 border border-dark-subtle">
+
+    <form id="paper" method="get" action="" class="d-flex justify-content-center align-items-center flex-column">
+  
+      <textarea placeholder="Enter something funny." class="edit-text" id="text" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: auto;"></textarea>  
+      <br>
+      <button class="btn btn-primary mt-5 px-5">
+        Upload
+      </button>
+      
+    </form>
+  
+</div>
+
+<script type="text/javascript">
+    textarea = document.querySelector("#text");
+    textarea.addEventListener('input', autoResize, false);
+
+    function autoResize() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    }
+</script>

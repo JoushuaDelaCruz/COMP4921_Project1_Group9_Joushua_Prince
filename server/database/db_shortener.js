@@ -14,10 +14,8 @@ const getOriginalURL = async (postData) => {
   
     try {
       const results = await database.query(urlSQL, params);
-      console.log(results)
       if (results.length > 0) {
         const originalURL = results[0][0].original_url;;
-        console.log("Original URL from the database: " + originalURL);
         return originalURL;
       } else {
         console.log("Short URL not found in the database.");

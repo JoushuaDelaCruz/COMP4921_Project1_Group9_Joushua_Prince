@@ -43,7 +43,6 @@ router.get("/", async (req, res) => {
 
   // Look up the original URL associated with the shortcode in your database
   const originalURL = await db_shortener.getOriginalURL(shortcode);
-  console.log("original url" + originalURL)
 
   if (originalURL) {
     // Redirect to the original URL
@@ -54,7 +53,7 @@ router.get("/", async (req, res) => {
 
   // Look up the original URL associated with the shortcode in your database
   const originalURL = await db_shortener.getOriginalURL(shortcode);
-  console.log("original url" + originalURL);
+
 
   if (originalURL) {
     // Redirect to the original URL
@@ -78,15 +77,15 @@ router.get("/:shortcode", async (req, res) => {
   const shortcode = req.params.shortcode;
   console.log("current shortcode for database lookup is " + shortcode)
   const originalURL = await db_shortener.getOriginalURL(shortcode);
-  console.log("Redirecting to" +originalURL)
+  console.log("Redirecting to" + originalURL)
 
-  // if (originalURL) {
-  //   // Redirect to the original URL
-  //   res.redirect(originalURL);
-  // } else {
-  //   // Handle the case where the shortcode doesn't exist
-  //   res.status(404).send("Short URL not found");
-  // }
+  if (originalURL) {
+    // Redirect to the original URL
+    res.redirect(originalURL);
+  } else {
+    // Handle the case where the shortcode doesn't exist
+    res.status(404).send("Short URL not found");
+  }
 });
 
 module.exports = router;

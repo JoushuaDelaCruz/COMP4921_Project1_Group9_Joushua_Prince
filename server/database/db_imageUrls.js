@@ -4,7 +4,7 @@ const urlInfo = require("./db_urls_info");
 const uploadImage = async (data) => {
   const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
   const uploadImageSQL = `
-  	INSERT INTO ImageUrls
+  	INSERT INTO image_url
   	(image_id, uploader_id, cloudinary_public_id, url_info_id)
   	VALUES
   	(:image_id,  :uploader_id, :cloudinary_public_id, :url_info_id);
@@ -43,7 +43,7 @@ const getUploadedImages = async () => {
       last_date_visited, 
       is_active, 
       ui.url_info_id
-    FROM ImageUrls as image
+    FROM image_url as image
     LEFT JOIN user on uploader_id = user_id
     LEFT JOIN urls_info as ui on ui.url_info_id = image.url_info_id
 	`;
@@ -64,9 +64,9 @@ const getUploadedImages = async () => {
 const getImage = async (image_id) => {
   const imageSQL = `
     SELECT cloudinary_public_id, date_created, uploader_id, username, is_active, ui.url_info_id
-    FROM ImageUrls
+    FROM image_url
     JOIN user on uploader_id = user_id
-    JOIN urls_info as ui on ui.url_info_id = ImageUrls.url_info_id
+    JOIN urls_info as ui on ui.url_info_id = image_url.url_info_id
     WHERE image_id = :image_id
   `;
 
@@ -111,55 +111,9 @@ const imageClicked = async (url_info_id) => {
   }
 };
 
-const deactivateImage = async (url_info_id) => {
-  const deactivateSQL = `
-  UPDATE urls_info 
-  SET is_active = 0
-  WHERE url_info_id = :url_info_id;`;
-
-  const params = {
-    url_info_id: url_info_id,
-  };
-
-  try {
-    const results = await database.query(deactivateSQL, params);
-    console.log("Successfully deactivated image");
-    console.log(results[0]);
-    return true;
-  } catch (err) {
-    console.log("Error failed to deactivate image");
-    console.log(err);
-    return false;
-  }
-};
-
-const activateImage = async (url_info_id) => {
-  const activateSQL = `
-  UPDATE urls_info 
-  SET is_active = 1
-  WHERE url_info_id = :url_info_id;`;
-
-  const params = {
-    url_info_id: url_info_id,
-  };
-
-  try {
-    const results = await database.query(activateSQL, params);
-    console.log("Successfully activated image");
-    console.log(results[0]);
-    return true;
-  } catch (err) {
-    console.log("Error failed to activate image");
-    console.log(err);
-    return false;
-  }
-};
-
 module.exports = {
   uploadImage,
   getUploadedImages,
   getImage,
   imageClicked,
-  deactivateImage,
-  activateImage,
 };

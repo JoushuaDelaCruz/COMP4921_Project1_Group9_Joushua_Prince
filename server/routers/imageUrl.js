@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const db_imageUrl = include("database/db_imageUrls");
+const db_urlInfo = include("database/db_urls_info");
 const shortId = require("shortid");
 
 const cloudinary_name = process.env.CLOUDINARY_CLOUD_NAME;
@@ -61,13 +62,13 @@ router.post("/addContent", upload.single("image"), async (req, res) => {
 
 router.post("/deactivate", async (req, res) => {
   const url_info_id = req.body.url_info_id;
-  await db_imageUrl.deactivateImage(url_info_id);
+  await db_urlInfo.deactivateUrl(url_info_id);
   res.redirect("/home");
 });
 
 router.post("/activate", async (req, res) => {
   const url_info_id = req.body.url_info_id;
-  await db_imageUrl.activateImage(url_info_id);
+  await db_urlInfo.activateUrl(url_info_id);
   res.redirect("/home");
 });
 

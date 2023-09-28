@@ -20,9 +20,7 @@
     -o-user-select: none;
     user-select: none; 
   }
-  #text {
-    max-width: 700px;
-    min-width: 600px;
+  .paper {
     overflow:hidden;
     background-color:#FFF;
     color:#222;
@@ -32,7 +30,7 @@
     resize:none;
     line-height:40px;
     padding-left:100px;
-    padding-right:100px;
+    padding-right:50px;
     padding-top:45px;
     padding-bottom:34px;
     background-image:url(https://static.tumblr.com/maopbtg/E9Bmgtoht/lines.png), url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png);
@@ -41,4 +39,36 @@
     border-radius:12px; 
     border-top:1px solid #FFF;
     border-bottom:1px solid #FFF;
+  }
+
+  #title {
+    background-color:transparent;
+    border-bottom:3px solid #000;
+    font-size:20px;
+    font-family:Courier, monospace;
+    height:28px;
+    font-weight:bold;
+    width:220px;
+  }
+
+  #margin {
+    margin-left:12px;
+    margin-bottom:20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none; 
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+  
+  table tr {
+    border-bottom: 1px solid 	#1E90FF;
+  }
+  
+  table tr:last-child {
+    border: 0;
   }

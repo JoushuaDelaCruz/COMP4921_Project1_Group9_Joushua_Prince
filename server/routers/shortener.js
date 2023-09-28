@@ -1,18 +1,9 @@
 require("../utils");
 const express = require("express");
 const router = express.Router();
-const database = include("mySQLDatabaseConnection");
-const db_utils = include("database/db_utils");
-const db_users = include("database/users");
 const db_shortener = include("database/db_shortener");
 
-
-const nodeCache = require("node-cache");
-const saltRounds = 12;
-const bcrypt = require("bcrypt");
-const bodyParser = require("body-parser");
 const shortId = require("shortid");
-const { Table } = require("@material-ui/core");
 
 
 
@@ -25,7 +16,7 @@ router.post("/", async (req, res) => {
   const shortcode = shortId.generate();
 
   // Ensure that the short URL starts with "http://"
-  const shortURL = shortcode
+  const shortURL = shortcode;
   // console.log("printing URL" + shortURL);
 
 
@@ -63,11 +54,11 @@ router.get("/", async (req, res) => {
 
   // Look up the original URL associated with the shortcode in your database
   const originalURL = await db_shortener.getOriginalURL(shortcode);
-  console.log("original url" + originalURL)
+  console.log("original url" + originalURL);
 
   if (originalURL) {
     // Redirect to the original URL
-    // increment url click inside urls 
+    // increment url click inside urls
     // render number of clicks to table in the page
     res.redirect(originalURL);
   } else {
@@ -97,8 +88,5 @@ router.get("/:shortcode", async (req, res) => {
   //   res.status(404).send("Short URL not found");
   // }
 });
-
-
-
 
 module.exports = router;

@@ -9,14 +9,22 @@ const getOriginalURL = async (postData) => {
       `;
 
       let params = {
-        username: postData.short_code,
+        short_code: postData,
       };
   
     try {
       const results = await database.query(urlSQL, params);
-      return results[0];
+      console.log(results)
+      if (results.length > 0) {
+        const originalURL = results[0][0].original_url;;
+        console.log("Original URL from the database: " + originalURL);
+        return originalURL;
+      } else {
+        console.log("Short URL not found in the database.");
+      }
+      console.log("database result " + results[0])
     } catch (err) {
-      console.log("Error failed to retrieve uploaded images");
+      console.log("Error while retrieving original URL from the database.");
       console.log(err);
       return;
     }
@@ -52,8 +60,8 @@ console.log(id)
   try {
     const results = await database.query(createURL, params);
 
-    console.log("Successfully recorded url");
-    console.log(results[0]);
+    // console.log("Successfully recorded url");
+    // console.log(results[0]);
     return true;
   } catch (err) {
     console.log("Error inserting url");

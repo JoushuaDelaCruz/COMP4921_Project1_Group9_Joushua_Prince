@@ -20,27 +20,41 @@ router.post("/", async (req, res) => {
     // URL already exists, increment the clicks count
     await db_shortener.incrementClicks(existingShortURL.short_code);
 
+    // Retrieve the click count
+    const clickCount = await db_shortener.getClicks(existingShortURL.short_code);
+    // Retrieve the 10 most recent URLs
+    const recentURLs = await db_shortener.getRecentURLs();
+    // console.log("logging rcenets" + recentURLs[0].numofhits);
+
     // Return the existing short code
     const shortURL = existingShortURL.short_code;
 
-    res.render("shortener", { shortURL, fullUrl });
+    res.render("shortener", {
+      shortURL,
+      fullUrl,
+      recentURLs
+    });
+  } else {
+    // Retrieve the 10 most recent URLs
+    const recentURLs = await db_shortener.getRecentURLs();
+    // Generate a unique short ID using shortid
+    const shortcode = shortId.generate();
+    // Ensure that the short URL starts with "http://"
+    const shortURL = shortcode;
+    var results = await db_shortener.createURL({
+      originalURL: fullUrl,
+      shortURL: shortURL,
+    });
+    if (results) {
+      const shortURLnew = `${shortcode}`;
+      res.render("shortener", {
+        shortURL: shortURLnew,
+        fullUrl: fullUrl,
+        recentURLs: recentURLs
+      });
+
+    }
   }
-
-  else {
- // Generate a unique short ID using shortid
- const shortcode = shortId.generate();
- // Ensure that the short URL starts with "http://"
- const shortURL = shortcode;
- 
- var results = await db_shortener.createURL({
-   originalURL: fullUrl,
-   shortURL: shortURL,
- });
- if (results) {
-   const shortURLnew = `${shortcode}`;
-   res.render("shortener", { shortURL: shortURLnew , fullUrl:fullUrl});
-
- }  }
 });
 
 

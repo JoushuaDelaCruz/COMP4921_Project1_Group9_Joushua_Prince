@@ -58,4 +58,36 @@ const getUploadedTexts = async () => {
   }
 };
 
+const getText = async (text_id) => {
+  const textSQL = `
+                SELECT 
+            	  text_id, 
+            	  title, 
+            	  date_created, 
+            	  uploader_id, 
+            	  username, 
+            	  num_hits, 
+            	  last_date_visited, 
+            	  is_active, 
+            	  ui.url_info_id
+            	FROM text_url as text
+            	JOIN user on uploader_id = user_id
+            	JOIN urls_info as ui on ui.url_info_id = text.url_info_id
+            	WHERE text_id = :text_id
+        	`;
+  const params = {
+    text_id: text_id,
+  };
+  try {
+    const results = await database.query(textSQL, params);
+    console.log("Successfully retrieves text");
+    console.log(results[0]);
+    return results[0];
+  } catch (err) {
+    console.log("Error failed to retrieve text");
+    console.log(err);
+    return;
+  }
+};
+
 module.exports = { uploadText, getUploadedTexts };

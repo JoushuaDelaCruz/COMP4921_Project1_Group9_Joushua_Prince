@@ -2,8 +2,8 @@ require("../utils");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const db_imageUrl = include("database/db_imageUrls");
 const db_urlInfo = require("../database/db_urls_info");
+const db_imageUrl = include("database/db_imageUrls");
 const shortId = require("shortid");
 
 const cloudinary_name = process.env.CLOUDINARY_CLOUD_NAME;
@@ -39,7 +39,7 @@ router.get("/:image", async (req, res) => {
   res.render("image", imageData[0]);
 });
 
-router.post("/addContent", upload.single("image"), async (req, res) => {
+router.post("/upload", upload.single("image"), async (req, res) => {
   if (!req.file) {
     return res.redirect("/home?image=true");
   }

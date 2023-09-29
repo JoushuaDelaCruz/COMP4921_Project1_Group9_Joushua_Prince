@@ -42,6 +42,7 @@ app.use(
   })
 );
 
+const textRouter = require("./routers/textUrl");
 const imageRouter = require("./routers/imageUrl");
 const signUpRouter = require("./routers/signUp");
 const shortenURLrouter = require("./routers/shortener");
@@ -53,12 +54,11 @@ app.use("/signup", signUpRouter);
 app.use("/shortener", shortenURLrouter);
 app.use("/imageUrls", imageRouter);
 app.use("/home", homeRouter);
+app.use("/textUrls", textRouter);
 
 app.get("/", (req, res) => {
   res.redirect("/home");
 });
-
-
 
 app.get("*", (req, res) => {
   res.status(404).render("404");

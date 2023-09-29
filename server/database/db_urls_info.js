@@ -22,7 +22,7 @@ exports.insertUrlInfoAndGetUrlInfoId = async () => {
   }
 };
 
-const deactivateUrl = async (url_info_id) => {
+exports.deactivateUrl = async (url_info_id) => {
   const deactivateSQL = `
   UPDATE urls_info 
   SET is_active = 0
@@ -44,7 +44,7 @@ const deactivateUrl = async (url_info_id) => {
   }
 };
 
-const activateUrl = async (url_info_id) => {
+exports.activateUrl = async (url_info_id) => {
   const activateSQL = `
   UPDATE urls_info 
   SET is_active = 1
@@ -66,4 +66,23 @@ const activateUrl = async (url_info_id) => {
   }
 };
 
-module.exports = { activateUrl, deactivateUrl };
+exports.deleteUrlInfo = async (url_info_id) => {
+  const deleteSQL = `
+  DELETE FROM urls_info 
+  WHERE url_info_id = :url_info_id;`;
+
+  const params = {
+    url_info_id: url_info_id,
+  };
+
+  try {
+    const results = await database.query(deleteSQL, params);
+    console.log("Successfully deleted url_info");
+    console.log(results[0]);
+    return true;
+  } catch (err) {
+    console.log("Error failed to delete url_info");
+    console.log(err);
+    return false;
+  }
+};

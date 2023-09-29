@@ -4,6 +4,12 @@ const db_textUrl = include("database/db_textUrls");
 const db_urlInfo = include("database/db_urls_info");
 const shortId = require("shortid");
 
+router.get("/:text", async (req, res) => {
+  const text_id = req.params.text;
+  console.log(text_id);
+  res.send("text");
+});
+
 router.post("/upload", async (req, res) => {
   const text = req.body.text;
   const title = req.body.title || "Untitled";

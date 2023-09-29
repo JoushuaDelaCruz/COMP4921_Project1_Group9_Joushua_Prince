@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const db_imageUrl = include("database/db_imageUrls");
-const db_urlInfo = include("database/db_urls_info");
+const db_urlInfo = require("../database/db_urls_info");
 const shortId = require("shortid");
 
 const cloudinary_name = process.env.CLOUDINARY_CLOUD_NAME;
@@ -54,7 +54,10 @@ router.post("/addContent", upload.single("image"), async (req, res) => {
       cloudinary_public_id: public_id,
       image_id: image_id,
     };
-    await db_imageUrl.uploadImage(uploadData);
+    const successful = await db_imageUrl.uploadImage(uploadData);
+    if (!successful) {
+      cloudinary.uploader.destroy(public_id);
+    }
     res.redirect("/home?image=true");
     return;
   });

@@ -68,6 +68,54 @@ console.log(id)
   }
 }
 
+// Function to get a short URL by its original URL
+const getShortURLByOriginalURL = async (originalURL) => {
+  const urlSQL = `
+    SELECT short_code
+    FROM short_url 
+    WHERE original_url = :original_url
+  `;
+
+  let params = {
+    original_url: originalURL,
+  };
+
+  try {
+    const results = await database.query(urlSQL, params);
+    if (results.length > 0) {
+      console.log("Logging URL that already exists" + results[0][0])
+      return results[0][0];
+    } else {
+      console.log("short_code not found in the database.");
+      return null;
+    }
+  } catch (err) {
+    console.log("Error while retrieving original URL from the database.");
+    console.log(err);
+    return null;
+  }
+};
 
 
-module.exports = { getOriginalURL, createURL };
+// Function to increment clicks for a short code
+const incrementClicks = async (shortcode) => {
+  const updateSQL = `
+    UPDATE short_url
+    SET numofhits = numofhits + 1
+    WHERE short_code = :short_code
+  `;
+
+  let params = {
+    short_code: shortcode,
+  };
+
+  try {
+    await database.query(updateSQL, params);
+  } catch (err) {
+    console.log("Error while incrementing clicks for the short URL.");
+    console.log(err);
+  }
+};
+
+
+module.exports = { getOriginalURL, createURL, getShortURLByOriginalURL, incrementClicks };

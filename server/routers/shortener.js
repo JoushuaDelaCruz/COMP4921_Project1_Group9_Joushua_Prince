@@ -12,29 +12,39 @@ router.post("/", async (req, res) => {
   console.log("Full URL submitted:");
 
   const fullUrl = req.body.fullUrl;
-  // Generate a unique short ID using shortid
-  const shortcode = shortId.generate();
-
-  // Ensure that the short URL starts with "http://"
-  const shortURL = shortcode;
-  // console.log("printing URL" + shortURL);
 
 
-  var results = await db_shortener.createURL({
-    originalURL: fullUrl,
-    shortURL: shortURL,
-  });
-  if (results) {
-    // console.log(results);
-    // console.log("recorded");
-    // const shortURLnew = `${req.protocol}://${req.get("host")}/${shortcode}`;
-    const shortURLnew = `${shortcode}`;
+  const existingShortURL = await db_shortener.getShortURLByOriginalURL(fullUrl);
 
-    res.render("shortener", { shortURL: shortURLnew , fullUrl:fullUrl});
-    // console.log("full URL" + shortURLnew)
-    // Look up the original URL associated with the shortcode in your database
+  if (existingShortURL) {
+    // URL already exists, increment the clicks count
+    await db_shortener.incrementClicks(existingShortURL.short_code);
 
+    // Return the existing short code
+    const shortURL = existingShortURL.short_code;
+
+    res.render("shortener", { shortURL, fullUrl });
   }
+
+  else {
+
+ // Generate a unique short ID using shortid
+ const shortcode = shortId.generate();
+
+ // Ensure that the short URL starts with "http://"
+ const shortURL = shortcode;
+ // console.log("printing URL" + shortURL);
+
+
+ var results = await db_shortener.createURL({
+   originalURL: fullUrl,
+   shortURL: shortURL,
+ });
+ if (results) {
+   const shortURLnew = `${shortcode}`;
+   res.render("shortener", { shortURL: shortURLnew , fullUrl:fullUrl});
+
+ }  }
 });
 
 

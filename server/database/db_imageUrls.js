@@ -4,10 +4,10 @@ const urlInfo = require("./db_urls_info");
 const uploadImage = async (data) => {
   const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
   const uploadImageSQL = `
-  	INSERT INTO image_url
-  	(image_id, uploader_id, cloudinary_public_id, url_info_id)
-  	VALUES
-  	(:image_id,  :uploader_id, :cloudinary_public_id, :url_info_id);
+    INSERT INTO image_url
+    (image_id, uploader_id, cloudinary_public_id, url_info_id)
+    VALUES
+    (:image_id, :uploader_id, :cloudinary_public_id, :url_info_id);
   `;
 
   const params = {
@@ -20,13 +20,13 @@ const uploadImage = async (data) => {
   try {
     console.log(params);
     const results = await database.query(uploadImageSQL, params);
-
     console.log("Successfully created image");
     console.log(results[0]);
     return true;
   } catch (err) {
     console.log("Error inserting image");
     console.log(err);
+    urlInfo.deleteUrlInfo(urlInfoFk);
     return false;
   }
 };

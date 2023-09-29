@@ -1,7 +1,6 @@
 <div class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-5 bg-opacity-75 border border-dark-subtle">
-
-    <form id="paper" method="get" action="" class="d-flex justify-content-center align-items-center flex-column">
-      <div id="margin" class="text-primary-emphasis fw-semibold edit-text">Title: <input id="title" class="text-primary-emphasis" type="text" name="title"></div>
+    <form id="paper" method="POST" action="/textUrls/upload" class="d-flex justify-content-center align-items-center flex-column">
+      <div id="margin" class="text-primary-emphasis fw-semibold edit-text">Title: <input id="title" value="" class="text-primary-emphasis" type="text" name="title"></div>
       <textarea placeholder="Enter something funny." class="edit-text paper" id="text" name="text" rows="4" 
       style="overflow: hidden; word-wrap: break-word; resize: none; height: auto; max-width: 700px;
       min-width: 600px;"></textarea>  
@@ -9,9 +8,7 @@
       <button class="btn btn-primary mt-5 px-5">
         Upload
       </button>
-      
     </form>
-  
 </div>
 
 <main class="container-fluid py-5" style="max-height: 75%">

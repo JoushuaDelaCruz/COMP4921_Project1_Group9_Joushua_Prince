@@ -6,6 +6,7 @@ const app = express();
 const bodyParser = require("body-parser");
 
 const db_imageUrl = include("database/db_imageUrls");
+const db_textUrl = include("database/db_textUrls");
 // / Middleware to parse JSON and URL-encoded request bodies
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
@@ -28,12 +29,15 @@ router.get("/", async (req, res) => {
     res.render("index", bundle);
     return;
   }
+  const texts = await db_textUrl.getUploadedTexts();
   if (text) {
     const bundle = {
+      texts: texts,
       isUserSignedIn: authenticated,
       imageClass: "text-light",
       shortenerClass: "text-light",
       textClass: "active",
+      userSignedIn: req.session ? req.session.user_id : -1,
     };
     res.render("index", bundle);
     return;

@@ -2,7 +2,7 @@
     $.cloudinary.config({ cloud_name: '<%= process.env.CLOUDINARY_CLOUD_NAME %>', secure: true});
 </script>
 <% if (isUserSignedIn) { %> 
-    <form action="/imageUrls/addContent" method="POST" enctype="multipart/form-data" class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-2 bg-opacity-75 border border-dark-subtle">
+    <form action="/imageUrls/upload" method="POST" enctype="multipart/form-data" class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-2 bg-opacity-75 border border-dark-subtle">
         <div class="col-lg-6 mx-auto" style="max-height: 25%;">
     
             <!-- Upload image input-->

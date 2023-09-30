@@ -21,3 +21,92 @@ exports.insertUrlInfoAndGetUrlInfoId = async () => {
     return false;
   }
 };
+
+exports.urlClicked = async (url_info_id) => {
+  const updateSQL = `
+  UPDATE urls_info 
+  SET num_hits = num_hits + 1, 
+  last_date_visited = :date 
+  WHERE url_info_id = :url_info_id;`;
+
+  const params = {
+    url_info_id: url_info_id,
+    date: new Date(),
+  };
+
+  try {
+    const results = await database.query(updateSQL, params);
+    console.log("Successfully updated urls_info");
+    console.log(results[0]);
+    return true;
+  } catch (err) {
+    console.log("Error failed to update urls_info");
+    console.log(err);
+    return false;
+  }
+};
+
+exports.deactivateUrl = async (url_info_id) => {
+  const deactivateSQL = `
+  UPDATE urls_info 
+  SET is_active = 0
+  WHERE url_info_id = :url_info_id;`;
+
+  const params = {
+    url_info_id: url_info_id,
+  };
+
+  try {
+    const results = await database.query(deactivateSQL, params);
+    console.log("Successfully deactivated image");
+    console.log(results[0]);
+    return true;
+  } catch (err) {
+    console.log("Error failed to deactivate image");
+    console.log(err);
+    return false;
+  }
+};
+
+exports.activateUrl = async (url_info_id) => {
+  const activateSQL = `
+  UPDATE urls_info 
+  SET is_active = 1
+  WHERE url_info_id = :url_info_id;`;
+
+  const params = {
+    url_info_id: url_info_id,
+  };
+
+  try {
+    const results = await database.query(activateSQL, params);
+    console.log("Successfully activated image");
+    console.log(results[0]);
+    return true;
+  } catch (err) {
+    console.log("Error failed to activate image");
+    console.log(err);
+    return false;
+  }
+};
+
+exports.deleteUrlInfo = async (url_info_id) => {
+  const deleteSQL = `
+  DELETE FROM urls_info 
+  WHERE url_info_id = :url_info_id;`;
+
+  const params = {
+    url_info_id: url_info_id,
+  };
+
+  try {
+    const results = await database.query(deleteSQL, params);
+    console.log("Successfully deleted url_info");
+    console.log(results[0]);
+    return true;
+  } catch (err) {
+    console.log("Error failed to delete url_info");
+    console.log(err);
+    return false;
+  }
+};

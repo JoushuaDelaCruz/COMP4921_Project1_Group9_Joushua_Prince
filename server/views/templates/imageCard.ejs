@@ -1,5 +1,5 @@
 <% if (image.is_active === 1){ %>
-  <a href="/imageUrls/<%- image.image_id %>" class="link-underline link-underline-opacity-0">
+  <a href="/imageUrls?image=<%- image.image_id %>" class="link-underline link-underline-opacity-0">
     <div class="card border-success" style="width: 18rem">
         <div class="bg-image w-100 hover-overlay ripple">
           <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', 

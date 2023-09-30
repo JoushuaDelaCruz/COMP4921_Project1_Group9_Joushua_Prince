@@ -11,11 +11,11 @@
       <div> Date Created: <%= date_created %> </div>
     </section>
    </div>
+   <div class="d-flex justify-content-between my-3" style="width: 700px;">
+      <div>
+         <a class="btn btn-primary" href="/home?text=true"> Home </a>
+      </div>
    <% if (owner){ %>
-      <div class="d-flex justify-content-between my-3" style="width: 700px;">
-         <div>
-            <a class="btn btn-primary" href="/home?text=true"> Home </a>
-         </div>
       <% if (is_active === 1) { %>
           <form action="/textUrls/deactivate" method="POST">
               <input type="hidden" name="url_info_id" value="<%= url_info_id %>"/>
@@ -29,7 +29,7 @@
               <button class="btn btn-success"> Activate </button>
           </form>
       <% } %>
-      </div>
   <% } %>
+   </div>
 </main>
 <%- include("templates/footer") %>

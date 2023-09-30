@@ -60,14 +60,13 @@ const getUploadedTexts = async () => {
 
 const getText = async (text_id) => {
   const textSQL = `
-                SELECT 
+              SELECT 
             	  text_id, 
-            	  title, 
+            	  title,
+                content, 
             	  date_created, 
             	  uploader_id, 
             	  username, 
-            	  num_hits, 
-            	  last_date_visited, 
             	  is_active, 
             	  ui.url_info_id
             	FROM text_url as text
@@ -90,4 +89,4 @@ const getText = async (text_id) => {
   }
 };
 
-module.exports = { uploadText, getUploadedTexts };
+module.exports = { uploadText, getUploadedTexts, getText };

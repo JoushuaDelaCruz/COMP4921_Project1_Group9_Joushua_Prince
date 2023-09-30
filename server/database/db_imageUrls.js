@@ -63,7 +63,7 @@ const getUploadedImages = async () => {
 
 const getImage = async (image_id) => {
   const imageSQL = `
-    SELECT cloudinary_public_id, date_created, uploader_id, username, is_active, ui.url_info_id
+    SELECT image_id, cloudinary_public_id, date_created, uploader_id, username, is_active, ui.url_info_id
     FROM image_url
     JOIN user on uploader_id = user_id
     JOIN urls_info as ui on ui.url_info_id = image_url.url_info_id
@@ -87,33 +87,8 @@ const getImage = async (image_id) => {
   }
 };
 
-const imageClicked = async (url_info_id) => {
-  const updateSQL = `
-  UPDATE urls_info 
-  SET num_hits = num_hits + 1, 
-  last_date_visited = :date 
-  WHERE url_info_id = :url_info_id;`;
-
-  const params = {
-    url_info_id: url_info_id,
-    date: new Date(),
-  };
-
-  try {
-    const results = await database.query(updateSQL, params);
-    console.log("Successfully updated urls_info");
-    console.log(results[0]);
-    return true;
-  } catch (err) {
-    console.log("Error failed to update urls_info");
-    console.log(err);
-    return false;
-  }
-};
-
 module.exports = {
   uploadImage,
   getUploadedImages,
   getImage,
-  imageClicked,
 };

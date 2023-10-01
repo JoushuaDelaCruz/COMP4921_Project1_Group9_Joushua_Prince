@@ -10,7 +10,7 @@ const shortId = require("shortid");
 
 router.post("/", async (req, res) => {
   console.log("Full URL submitted:");
-
+  
   const fullUrl = req.body.fullUrl;
 
 
@@ -24,7 +24,8 @@ router.post("/", async (req, res) => {
     const clickCount = await db_shortener.getClicks(existingShortURL.short_code);
     // Retrieve the 10 most recent URLs
     const recentURLs = await db_shortener.getRecentURLs();
-    // console.log("logging rcenets" + recentURLs[0].numofhits);
+    console.log("logging recents" + recentURLs);
+
 
     // Return the existing short code
     const shortURL = existingShortURL.short_code;
@@ -35,8 +36,9 @@ router.post("/", async (req, res) => {
       recentURLs
     });
   } else {
-    // Retrieve the 10 most recent URLs
-    const recentURLs = await db_shortener.getRecentURLs();
+
+    console.log("logging recents" + recentURLs);
+
     // Generate a unique short ID using shortid
     const shortcode = shortId.generate();
     // Ensure that the short URL starts with "http://"
@@ -45,8 +47,11 @@ router.post("/", async (req, res) => {
       originalURL: fullUrl,
       shortURL: shortURL,
     });
+
     if (results) {
       const shortURLnew = `${shortcode}`;
+      // Retrieve the 10 most recent URLs
+      const recentURLs = await db_shortener.getRecentURLs();
       res.render("shortener", {
         shortURL: shortURLnew,
         fullUrl: fullUrl,

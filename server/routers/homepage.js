@@ -7,9 +7,12 @@ const bodyParser = require("body-parser");
 
 const db_imageUrl = include("database/db_imageUrls");
 const db_textUrl = include("database/db_textUrls");
+const db_shortener = include("database/db_shortener");
 // / Middleware to parse JSON and URL-encoded request bodies
 app.use(bodyParser.json()); // Parse JSON bodies
-app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(bodyParser.urlencoded({
+  extended: true
+})); // Parse URL-encoded bodies
 
 const getImages = async () => {
   const images = await db_imageUrl.getUploadedImages();
@@ -17,10 +20,15 @@ const getImages = async () => {
 };
 
 router.get("/", async (req, res) => {
-  const { shortener, text } = req.query;
+  const {
+    shortener,
+    text
+  } = req.query;
   const authenticated = req.session ? req.session.authenticated : false;
+  const recentURLs = await db_shortener.getRecentURLs();
   if (shortener) {
     const bundle = {
+      recentURLs: recentURLs,
       isUserSignedIn: authenticated,
       imageClass: "text-light",
       shortenerClass: "active",

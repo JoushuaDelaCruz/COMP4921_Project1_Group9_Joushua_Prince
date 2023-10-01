@@ -18,7 +18,7 @@ const uploadImage = async (data) => {
   };
 
   try {
-    console.log(params);
+    // console.log(params);
     const results = await database.query(uploadImageSQL, params);
     console.log("Successfully created image");
     console.log(results[0]);
@@ -53,7 +53,7 @@ const getUploadedImages = async () => {
 
     // console.log("Successfully retrieves all uploaded images");
     // console.log(results[0]);
-    return results[0];
+    // return results[0];
   } catch (err) {
     console.log("Error failed to retrieve uploaded images");
     console.log(err);
@@ -78,7 +78,7 @@ const getImage = async (image_id) => {
     const results = await database.query(imageSQL, param);
 
     console.log("Successfully retrieves image");
-    console.log(results[0]);
+    // console.log(results[0]);
     return results[0];
   } catch (err) {
     console.log("Error failed to retrieve image");

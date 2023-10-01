@@ -10,27 +10,21 @@ const db_textUrl = include("database/db_textUrls");
 const db_shortener = include("database/db_shortener");
 // / Middleware to parse JSON and URL-encoded request bodies
 app.use(bodyParser.json()); // Parse JSON bodies
-app.use(bodyParser.urlencoded({
-  extended: true
-})); // Parse URL-encoded bodies
-
-const getImages = async () => {
-  const images = await db_imageUrl.getUploadedImages();
-  return images;
-};
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+); // Parse URL-encoded bodies
 
 function truncateURL(url, maxLength = 35) {
   if (url.length > maxLength) {
-    return url.substring(0, maxLength) + '...';
+    return url.substring(0, maxLength) + "...";
   }
   return url;
 }
 
 router.get("/", async (req, res) => {
-  const {
-    shortener,
-    text
-  } = req.query;
+  const { shortener, text } = req.query;
   const authenticated = req.session ? req.session.authenticated : false;
   const recentURLs = await db_shortener.getRecentURLs();
   if (shortener) {
@@ -41,7 +35,7 @@ router.get("/", async (req, res) => {
       shortenerClass: "active",
       textClass: "text-light",
       truncateURL: truncateURL,
-      userSignedIn: req.session ? req.session.user_id : -1
+      userSignedIn: req.session ? req.session.user_id : -1,
     };
     res.render("index", bundle);
     return;
@@ -59,7 +53,8 @@ router.get("/", async (req, res) => {
     res.render("index", bundle);
     return;
   }
-  const images = await getImages();
+  const images = await db_imageUrl.getUploadedImages();
+  console.log(images);
   const bundle = {
     images: images,
     isUserSignedIn: authenticated,

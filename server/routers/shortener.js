@@ -88,4 +88,25 @@ router.get("/:shortcode", async (req, res) => {
   }
 });
 
+// Delete Redirect
+router.get("/delete/:shortcode", async (req, res) => {
+  const shortcode = req.params.shortcode;
+  const user_id = req.session ? req.session.user_id : null;
+
+  // Check if the user is the owner of the redirect
+  const redirect = await db_shortener.getRedirectByShortcode(shortcode);
+  if (!redirect) {
+    return res.status(404).send("Short URL not found");
+  }
+
+  if (user_id !== redirect.user_id) {
+    return res.status(403).send("Unauthorized to delete this redirect");
+  }
+
+  // Delete the redirect permanently from the database
+  await db_shortener.deleteRedirect(shortcode);
+
+  res.redirect("/shortener"); // Redirect back to the main shortener page
+});
+
 module.exports = router;

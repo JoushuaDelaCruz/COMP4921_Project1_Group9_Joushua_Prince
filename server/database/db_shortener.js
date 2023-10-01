@@ -154,6 +154,7 @@ const getRecentURLs = async () => {
     LIMIT 10;
   `;
 
+
   try {
     const results = await database.query(recentURLsSQL);
     return results[0];
@@ -164,6 +165,53 @@ const getRecentURLs = async () => {
   }
 };
 
+// Function to delete a URL redirect by shortcode
+const deleteRedirect = async (shortcode) => {
+  const deleteSQL = `
+    DELETE FROM short_url
+    WHERE short_code = :short_code;
+  `;
+
+  let params = {
+    short_code: shortcode,
+  };
+  try {
+    const results = await database.query(deleteSQL, params);
+    if (results.affectedRows > 0) {
+      console.log("URL deleted")
+      return true; // URL deleted successfully
+    } else {
+      return false; // URL with the specified shortcode was not found
+    }
+  } catch (err) {
+    console.log("Error while deleting URL from the database.");
+    console.log(err);
+    return 0;
+  }
+
+};
+
+// Function to delete a URL redirect by shortcode
+const getIdByShortcode = async (shortcode) => {
+  const deleteSQL = `
+    SELECT user_id FROM short_url
+    WHERE short_code = :short_code;
+  `;
+
+  let params = {
+    short_code: shortcode,
+  };
+  try {
+    const results = await database.query(deleteSQL, params);
+    return results[0][0].user_id
+  } catch (err) {
+    console.log("Error while deleting URL from the database.");
+    console.log(err);
+    return 0;
+  }
+
+};
+
 
 
 module.exports = {
@@ -172,5 +220,7 @@ module.exports = {
   getShortURLByOriginalURL,
   incrementClicks,
   getClicks,
-  getRecentURLs
+  getRecentURLs,
+  deleteRedirect,
+  getIdByShortcode
 };

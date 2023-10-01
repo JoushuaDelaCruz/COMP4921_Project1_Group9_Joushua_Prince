@@ -11,6 +11,8 @@ async function createTables() {
         );
     `;
 
+  
+
     let createShortUrlTableSQL = `
     CREATE TABLE IF NOT EXISTS short_url (
         id VARCHAR(10) NOT NULL,

@@ -44,7 +44,7 @@ async function createURL(postData) {
 
   let createURL = `
     INSERT INTO short_url (id,  original_url,short_code, user_id)
-     VALUES (:id, :originalURL, :shortURL, 1);
+     VALUES (:id, :originalURL, :shortURL,:user_id);
 
 	
 	`;
@@ -52,11 +52,12 @@ async function createURL(postData) {
   let params = {
     originalURL: postData.originalURL,
     shortURL: postData.shortURL,
-    id: id
+    id: id,
+    user_id: postData.user_id
   };
 
   try {
-    const results = await database.query(createURL, params);
+    await database.query(createURL, params);
 
     // console.log("Successfully recorded url");
     // console.log(results[0]);

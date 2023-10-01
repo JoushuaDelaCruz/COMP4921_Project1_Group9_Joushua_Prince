@@ -18,7 +18,10 @@ router.post("/", async (req, res) => {
   console.log("Full URL submitted:");
 
   const fullUrl = req.body.fullUrl;
+  const user_id = req.session ? req.session.user_id : null;
+  userSignedIn = req.session ? req.session.user_id : -1
 
+  console.log("Current user" + user_id)
 
   const existingShortURL = await db_shortener.getShortURLByOriginalURL(fullUrl);
 
@@ -36,7 +39,8 @@ router.post("/", async (req, res) => {
       shortURL,
       fullUrl,
       recentURLs,
-      truncateURL
+      truncateURL,
+      userSignedIn
     });
   } else {
 
@@ -48,6 +52,7 @@ router.post("/", async (req, res) => {
     var results = await db_shortener.createURL({
       originalURL: fullUrl,
       shortURL: shortURL,
+      user_id: user_id
     });
 
     if (results) {
@@ -58,7 +63,8 @@ router.post("/", async (req, res) => {
         shortURL: shortURLnew,
         fullUrl: fullUrl,
         recentURLs: recentURLs,
-        truncateURL
+        truncateURL,
+        userSignedIn
       });
 
     }

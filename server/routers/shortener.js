@@ -6,11 +6,17 @@ const db_shortener = include("database/db_shortener");
 const shortId = require("shortid");
 
 
-
+// Define a function to truncate a URL to a specific length
+function truncateURL(url, maxLength = 50) {
+  if (url.length > maxLength) {
+    return url.substring(0, maxLength) + '...';
+  }
+  return url;
+}
 
 router.post("/", async (req, res) => {
   console.log("Full URL submitted:");
-  
+
   const fullUrl = req.body.fullUrl;
 
 
@@ -20,12 +26,8 @@ router.post("/", async (req, res) => {
     // URL already exists, increment the clicks count
     await db_shortener.incrementClicks(existingShortURL.short_code);
 
-    // Retrieve the click count
-    const clickCount = await db_shortener.getClicks(existingShortURL.short_code);
-    // Retrieve the 10 most recent URLs
     const recentURLs = await db_shortener.getRecentURLs();
     console.log("logging recents" + recentURLs);
-
 
     // Return the existing short code
     const shortURL = existingShortURL.short_code;
@@ -33,11 +35,11 @@ router.post("/", async (req, res) => {
     res.render("shortener", {
       shortURL,
       fullUrl,
-      recentURLs
+      recentURLs,
+      truncateURL
     });
   } else {
 
-    console.log("logging recents" + recentURLs);
 
     // Generate a unique short ID using shortid
     const shortcode = shortId.generate();
@@ -55,7 +57,8 @@ router.post("/", async (req, res) => {
       res.render("shortener", {
         shortURL: shortURLnew,
         fullUrl: fullUrl,
-        recentURLs: recentURLs
+        recentURLs: recentURLs,
+        truncateURL
       });
 
     }

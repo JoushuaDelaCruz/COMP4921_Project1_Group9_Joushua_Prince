@@ -29,7 +29,7 @@
         <% if (recentURLs && recentURLs.length > 0) { %>
           <% for (let i = 0; i < recentURLs.length; i++) { %>
             <tr>
-              <td><%= recentURLs[i].original_url %></td>
+              <td><%= truncateURL(recentURLs[i].original_url) %></td>
               <td><a href="/shortener/<%= recentURLs[i].short_code %>"><%= recentURLs[i].short_code %></a></td>
               <td><%= recentURLs[i].numofhits %></td>
             </tr>
@@ -41,6 +41,7 @@
         <% } %>
       </tbody>
     </table>
+    
 
  
     <% if (typeof shortURL !== 'undefined') { %>

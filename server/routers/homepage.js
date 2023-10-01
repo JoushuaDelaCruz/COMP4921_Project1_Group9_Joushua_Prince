@@ -19,6 +19,13 @@ const getImages = async () => {
   return images;
 };
 
+function truncateURL(url, maxLength = 50) {
+  if (url.length > maxLength) {
+    return url.substring(0, maxLength) + '...';
+  }
+  return url;
+}
+
 router.get("/", async (req, res) => {
   const {
     shortener,
@@ -33,6 +40,7 @@ router.get("/", async (req, res) => {
       imageClass: "text-light",
       shortenerClass: "active",
       textClass: "text-light",
+      truncateURL: truncateURL,
       userSignedIn: req.session ? req.session.user_id : -1
     };
     res.render("index", bundle);

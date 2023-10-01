@@ -148,7 +148,7 @@ const getClicks = async (shortcode) => {
 // Function to get the 10 most recent records with click counts
 const getRecentURLs = async () => {
   const recentURLsSQL = `
-    SELECT original_url, short_code, numofhits
+    SELECT original_url, short_code, numofhits, datecreated, datelastvisited
     FROM short_url
     ORDER BY datelastvisited DESC
     LIMIT 10;
@@ -213,6 +213,30 @@ const getIdByShortcode = async (shortcode) => {
 };
 
 
+// Function to update the datelastvisited field for a given shortcode
+const updateLastVisited = async (shortcode) => {
+  console.log("UPDATING")
+  const updateLastVisitedSQL = `
+    UPDATE short_url
+    SET datelastvisited = NOW()  
+    WHERE short_code = :short_code;
+  `;
+
+  let params = {
+    short_code: shortcode,
+  };
+
+  try {
+    const result = await database.query(updateLastVisitedSQL, params);
+    console.log(result)
+    return result;
+  } catch (err) {
+    console.log("Error while updating last visited timestamp in the database.");
+    console.log(err);
+    throw err;
+  }
+};
+
 
 module.exports = {
   getOriginalURL,
@@ -222,5 +246,6 @@ module.exports = {
   getClicks,
   getRecentURLs,
   deleteRedirect,
-  getIdByShortcode
+  getIdByShortcode,
+  updateLastVisited
 };

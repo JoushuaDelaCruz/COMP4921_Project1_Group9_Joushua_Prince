@@ -19,7 +19,7 @@ const getImages = async () => {
   return images;
 };
 
-function truncateURL(url, maxLength = 50) {
+function truncateURL(url, maxLength = 35) {
   if (url.length > maxLength) {
     return url.substring(0, maxLength) + '...';
   }

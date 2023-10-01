@@ -7,7 +7,7 @@ const shortId = require("shortid");
 
 
 // Define a function to truncate a URL to a specific length
-function truncateURL(url, maxLength = 50) {
+function truncateURL(url, maxLength = 35) {
   if (url.length > maxLength) {
     return url.substring(0, maxLength) + '...';
   }
@@ -79,8 +79,9 @@ router.get("/:shortcode", async (req, res) => {
   console.log("Redirecting to" + originalURL)
 
   if (originalURL) {
-    // Redirect to the original URL
     res.redirect(originalURL);
+    // Update the last visited timestamp in the database
+    await db_shortener.updateLastVisited(shortcode);
   } else {
     // Handle the case where the shortcode doesn't exist
     res.status(404).send("Short URL not found");
@@ -107,5 +108,8 @@ router.post("/delete/:shortcode", async (req, res) => {
   res.redirect("/home?shortener=true");
 
 });
+
+
+
 
 module.exports = router;

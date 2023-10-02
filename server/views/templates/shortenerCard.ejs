@@ -1,0 +1,67 @@
+<% if (url.is_active === 1){ %>
+    <tr>
+        <td class="d-flex justify-content-between">
+          <div class="d-flex align-items-center mx-3 text-primary-emphasis">
+            <div class="d-flex flex-column justify-content-center align-items-center p-3 border-end border-2 border-primary-subtle">
+              <span class="fw-semibold fs-4 text m-0 p-0"> <%= url.numofhits %> </span> 
+              <p class="text-body-tertiary fw-medium m-0 p-0" style="font-size: 0.80rem;">hits</p>
+            </div>
+            <a href="/shortener/<%= url.short_code %>" class="link-underline link-underline-opacity-0 link-body-emphasis">
+              <div class="d-flex flex-column ml-3 py-3 pr-4 w-">
+                <h2 class="fs-5 p-0 mb-0 fs-4"> Short Url: <%= url.short_code %>  </h2>
+                <h3 class="p-0 mb-1 fs-6"> Original Url: <%= truncateURL(url.original_url) %> </h3>
+                <span class="d-flex gap-2" style="font-size: 0.90rem;">
+                  <p class="p-0 mb-0"> <span class="fw-medium"> Uploader: </span> <%= url.username %> </p>
+                  <p class="p-0 mb-0 fw-semibold"> | </p>
+                  <p class="p-0 m-0"> <span class="fw-medium"> Written Date: </span> <%= url.datecreated %></p>
+                </span>
+                <% if (url.datelastvisited){ %>
+                    <span class="p-0 m-0" style="font-size: 0.90rem;">
+                        <span class="fw-medium"> Last Visited: </span> <%- url.datelastvisited %>
+                    </span>
+                <% } %>
+              </div>
+            </a>
+          </div>
+          <% if (url.user_id === userSignedIn){ %>
+            <form action="/shortener/deactivate" class="d-flex align-items-center" method="POST">
+                <input type="hidden" name="url_info_id" value="<%= url.url_info_id %>"/>
+                <button class="btn btn-success"> Deactivate </button>
+            </form>
+          <% } %>
+        </td>
+    </tr>
+<% } else { %>
+    <tr>
+        <td class="d-flex justify-content-between">
+          <div class="d-flex align-items-center mx-3 text-primary-emphasis">
+            <div class="d-flex flex-column justify-content-center align-items-center p-3 border-end border-2 border-primary-subtle">
+              <span class="fw-semibold fs-4 text m-0 p-0"> <%= url.numofhits %> </span> 
+              <p class="text-body-tertiary fw-medium m-0 p-0" style="font-size: 0.80rem;">hits</p>
+            </div>
+            <a href="/shortener/<%= url.short_code %>" class="link-underline link-underline-opacity-0 link-body-emphasis">
+              <div class="d-flex flex-column ml-3 py-3 pr-4 w-">
+                <h2 class="fs-5 p-0 mb-0 fs-4"> Short Url: <%= url.short_code %>  </h2>
+                <h3 class="p-0 mb-1 fs-6"> Original Url: <%= truncateURL(url.original_url) %> </h3>
+                <span class="d-flex gap-2" style="font-size: 0.90rem;">
+                  <p class="p-0 mb-0"> <span class="fw-medium"> Uploader: </span> <%= url.username %> </p>
+                  <p class="p-0 mb-0 fw-semibold"> | </p>
+                  <p class="p-0 m-0"> <span class="fw-medium"> Written Date: </span> <%= url.datecreated %></p>
+                </span>
+                <% if (url.datelastvisited){ %>
+                    <span class="p-0 m-0" style="font-size: 0.90rem;">
+                        <span class="fw-medium"> Last Visited: </span> <%- url.datelastvisited %>
+                    </span>
+                <% } %>
+              </div>
+            </a>
+          </div>
+          <% if (url.user_id === userSignedIn){ %>
+            <form action="/shortener/activate" class="d-flex align-items-center" method="POST">
+                <input type="hidden" name="url_info_id" value="<%= url.url_info_id %>"/>
+                <button class="btn btn-info"> Deactivate </button>
+            </form>
+          <% } %>
+        </td>
+    </tr>
+<% } %>

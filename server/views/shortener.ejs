@@ -36,6 +36,7 @@
           <th>Clicks</th>
           <th>Date Created</th> <!-- Add Date Created column -->
           <th>Last Visited</th> <!-- Add Last Visited column -->
+          <th>Is Active</th> <!-- Add Is Active column -->
           <th>Action</th> <!-- Add a new column for the Delete action -->
         </tr>
       </thead>
@@ -44,15 +45,31 @@
           <% for (let i = 0; i < recentURLs.length; i++) { %>
             <tr>
               <td><%= truncateURL(recentURLs[i].original_url) %></td>
-              <td><a href="/shortener/<%= recentURLs[i].short_code %>"><%= recentURLs[i].short_code %></a></td>
-              <td><%= recentURLs[i].numofhits %></td>
-              <td><%= recentURLs[i].datecreated %></td> <!-- Add Date Created value -->
-              <td><%= recentURLs[i].datelastvisited %></td> <!-- Add Last Visited value -->
+              <% if (recentURLs[i].is_active === 1) { %>
+                <!-- Only make the link clickable when is_active is 1 -->
+                <td><a href="/shortener/<%= recentURLs[i].short_code %>"><%= recentURLs[i].short_code %></a></td>
+              <% } else { %>
+                <!-- Display the URL text as plain text when is_active is 0 -->
+                <td><%= recentURLs[i].short_code %></td>
+              <% } %>
+              <td><%= recentURLs[i].num_hits %></td>
+              <td><%= recentURLs[i].date_created %></td> <!-- Add Date Created value -->
+              <td><%= recentURLs[i].last_date_visited %></td> <!-- Add Last Visited value -->
               <td>
-                <!-- Add a Delete button -->
+                <% if (recentURLs[i].is_active === 1) { %>
+                  <!-- Display "Active" or checkmark (✓) if isActive is true -->
+                  Active
+                <% } else { %>
+                  <!-- Display "Inactive" if isActive is false -->
+                  Inactive
+                <% } %>
+              </td>
+              <td>
                 <% if (userSignedIn) { %>
-                  <form action="/shortener/deactivate/<%= recentURLs[i].short_code %>" method="POST" class="deactivate-form">
-                    <button type="submit" class="btn btn-danger btn-sm">Deactivate</button>
+                  <form action="/shortener/<%= recentURLs[i].is_active === 0 ? 'activate' : 'deactivate' %>/<%= recentURLs[i].short_code %>" method="POST" class="toggle-activation-form">
+                    <button type="submit" class="btn btn-<%= recentURLs[i].is_active === 0 ? 'success' : 'danger' %> btn-sm">
+                      <%= recentURLs[i].is_active === 0 ? 'Activate' : 'Deactivate' %>
+                    </button>
                   </form>
                 <% } %>                
               </td>

@@ -11,23 +11,20 @@ async function createTables() {
         );
     `;
 
+
+
+  let createShortUrlTableSQL = `
+    CREATE TABLE IF NOT EXISTS short_urls (
+      id VARCHAR(10) NOT NULL,
+      original_url TEXT NOT NULL,
+      short_code VARCHAR(45) NOT NULL,
+      user_id INT NOT NULL,
+      url_info_id INT, 
+      PRIMARY KEY (id),
+      FOREIGN KEY (user_id) REFERENCES user(user_id),
+      FOREIGN KEY (url_info_id) REFERENCES urls_info(url_info_id) 
+  );
   
-
-    let createShortUrlTableSQL = `
-    CREATE TABLE IF NOT EXISTS short_url (
-        id VARCHAR(10) NOT NULL,
-        original_url TEXT NOT NULL,
-        short_code VARCHAR(45) NOT NULL,
-        user_id INT NOT NULL,
-        datecreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        datelastvisited TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        numofhits INT DEFAULT 0,
-        PRIMARY KEY (id),
-        FOREIGN KEY (user_id) REFERENCES user(user_id)
-    );
-
-
-    id, user_id, text_submitted, number_of_texts, date_submitted_
 `;
 
 
@@ -48,4 +45,6 @@ async function createTables() {
   }
 }
 
-module.exports = { createTables };
+module.exports = {
+  createTables
+};

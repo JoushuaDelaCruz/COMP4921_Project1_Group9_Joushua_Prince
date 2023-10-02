@@ -18,7 +18,7 @@ const uploadImage = async (data) => {
   };
 
   try {
-    const results = await database.query(uploadImageSQL, params);
+    await database.query(uploadImageSQL, params);
     console.log("Successfully created image");
     return true;
   } catch (err) {

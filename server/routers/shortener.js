@@ -84,7 +84,7 @@ router.get("/:shortcode", async (req, res) => {
 });
 
 // Delete Redirect
-router.post("/delete/:shortcode", async (req, res) => {
+router.post("/deactivate/:shortcode", async (req, res) => {
   console.log("Now deleting");
   const shortcode = req.params.shortcode;
   userSignedIn = req.session ? req.session.user_id : -1;

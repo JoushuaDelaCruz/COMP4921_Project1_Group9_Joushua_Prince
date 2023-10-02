@@ -92,7 +92,6 @@ router.get("/:shortcode", async (req, res) => {
 
 
 
-// Delete Redirect
 router.post("/deactivate/:shortcode", async (req, res) => {
   console.log("Now deacvating");
   const shortcode = req.params.shortcode;
@@ -113,4 +112,25 @@ router.post("/deactivate/:shortcode", async (req, res) => {
   res.redirect("/home?shortener=true");
 });
 
+
+
+router.post("/activate/:shortcode", async (req, res) => {
+  console.log("Now deacvating");
+  const shortcode = req.params.shortcode;
+  userSignedIn = req.session ? req.session.user_id : -1;
+  const user_id = req.session ? req.session.user_id : null;
+  console.log(user_id)
+
+  // Check if the user is the owner of the redirect
+  const urlOwner = await db_shortener.getIdByShortcode(shortcode);
+  console.log("Owner is " + urlOwner);
+
+  if (user_id !== urlOwner) {
+    return res.status(403).send("Unauthorized to Activate this redirect");
+  }
+
+  const urls_info_id = await db_shortener.getShortURLIdInfoByShortCode(shortcode);
+  await db_urls_info.activateUrl(urls_info_id);
+  res.redirect("/home?shortener=true");
+});
 module.exports = router;

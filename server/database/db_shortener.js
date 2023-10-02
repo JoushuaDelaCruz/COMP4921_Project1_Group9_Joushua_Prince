@@ -214,16 +214,17 @@ const getIdByShortcode = async (shortcode) => {
 
 
 // Function to update the datelastvisited field for a given shortcode
-const updateLastVisited = async (shortcode) => {
-  console.log("UPDATING")
+const updateLastVisited = async (shortcode, lastVisited) => {
   const updateLastVisitedSQL = `
     UPDATE short_url
-    SET datelastvisited = NOW()  
+    SET datelastvisited = :lastvisited  
     WHERE short_code = :short_code;
   `;
 
   let params = {
     short_code: shortcode,
+    lastVisited: lastVisited
+
   };
 
   try {

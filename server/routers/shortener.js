@@ -80,8 +80,9 @@ router.get("/:shortcode", async (req, res) => {
 
   if (originalURL) {
     res.redirect(originalURL);
-    // Update the last visited timestamp in the database
-    await db_shortener.updateLastVisited(shortcode);
+    const lastVisited = new Date();
+    console.log(lastVisited)
+    await db_shortener.updateLastVisited(shortcode, lastVisited);
   } else {
     // Handle the case where the shortcode doesn't exist
     res.status(404).send("Short URL not found");

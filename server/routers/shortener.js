@@ -2,6 +2,7 @@ require("../utils");
 const express = require("express");
 const router = express.Router();
 const db_shortener = include("database/db_shortener");
+const db_urls_info = include("database/db_urls_info");
 
 const shortId = require("shortid");
 
@@ -25,8 +26,6 @@ router.post("/", async (req, res) => {
   const existingShortURL = await db_shortener.getShortURLByOriginalURL(fullUrl);
 
   if (existingShortURL) {
-    // URL already exists, increment the clicks count
-    await db_shortener.incrementClicks(existingShortURL.short_code);
 
     const recentURLs = await db_shortener.getRecentURLs();
     console.log("logging recents" + recentURLs);
@@ -46,15 +45,22 @@ router.post("/", async (req, res) => {
     const shortcode = shortId.generate();
     // Ensure that the short URL starts with "http://"
     const shortURL = shortcode;
-    var results = await db_shortener.createURL({
-      originalURL: fullUrl,
-      shortURL: shortURL,
-      user_id: user_id,
-    });
+
+    try {
+      const url_info_id = await db_urls_info.insertUrlInfoAndGetUrlInfoId();
+      var results = await db_shortener.createURL({
+        originalURL: fullUrl,
+        shortURL: shortURL,
+        user_id: user_id,
+        url_info_id: url_info_id
+      });
+    } catch (error) {
+      console.error("Error creating URL:", error);
+
+    }
 
     if (results) {
       const shortURLnew = `${shortcode}`;
-      // Retrieve the 10 most recent URLs
       const recentURLs = await db_shortener.getRecentURLs();
       res.render("shortener", {
         shortURL: shortURLnew,
@@ -71,35 +77,39 @@ router.get("/:shortcode", async (req, res) => {
   const shortcode = req.params.shortcode;
   const originalURL = await db_shortener.getOriginalURL(shortcode);
   console.log("Redirecting to" + originalURL);
+  const url_info_id = await db_shortener.getShortURLIdInfoByOriginalURL(originalURL);
+  console.log("UPDATE MHANI " + url_info_id)
 
   if (originalURL) {
     res.redirect(originalURL);
-    const lastVisited = new Date();
-    console.log(lastVisited)
-    await db_shortener.updateLastVisited(shortcode, lastVisited);
+    await db_urls_info.urlClicked(url_info_id)
   } else {
     // Handle the case where the shortcode doesn't exist
     res.status(404).send("Short URL not found");
   }
 });
 
+
+
+
 // Delete Redirect
 router.post("/deactivate/:shortcode", async (req, res) => {
-  console.log("Now deleting");
+  console.log("Now deacvating");
   const shortcode = req.params.shortcode;
   userSignedIn = req.session ? req.session.user_id : -1;
   const user_id = req.session ? req.session.user_id : null;
+  console.log(user_id)
 
   // Check if the user is the owner of the redirect
   const urlOwner = await db_shortener.getIdByShortcode(shortcode);
   console.log("Owner is " + urlOwner);
 
   if (user_id !== urlOwner) {
-    return res.status(403).send("Unauthorized to delete this redirect");
+    return res.status(403).send("Unauthorized to Deactivate this redirect");
   }
 
-  // Delete the redirect permanently from the database
-  await db_shortener.deleteRedirect(shortcode);
+  const urls_info_id = await db_shortener.getShortURLIdInfoByShortCode(shortcode);
+  await db_urls_info.deactivateUrl(urls_info_id);
   res.redirect("/home?shortener=true");
 });
 

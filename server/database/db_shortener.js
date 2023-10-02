@@ -3,7 +3,7 @@ const database = include("mySQLDatabaseConnection");
 const getOriginalURL = async (postData) => {
   const urlSQL = `
       SELECT original_url
-      FROM short_url 
+      FROM short_urls 
       WHERE short_code = :short_code
       `;
 
@@ -28,6 +28,9 @@ const getOriginalURL = async (postData) => {
 };
 
 async function createURL(postData) {
+
+  console.log("LOGGING POST DATA" + postData.url_info_id);
+
   // Call the stored function to generate a unique short code
   const generateShortCodeQuery = `
       SELECT generateUniqueShortCode() AS shortCode;
@@ -37,10 +40,8 @@ async function createURL(postData) {
   console.log(id);
 
   let createURL = `
-    INSERT INTO short_url (id,  original_url,short_code, user_id)
-     VALUES (:id, :originalURL, :shortURL,:user_id);
-
-	
+    INSERT INTO short_urls (id,  original_url,short_code, user_id,url_info_id)
+     VALUES (:id, :originalURL, :shortURL,:user_id, :url_info_id);
 	`;
 
   let params = {
@@ -48,6 +49,7 @@ async function createURL(postData) {
     shortURL: postData.shortURL,
     id: id,
     user_id: postData.user_id,
+    url_info_id: postData.url_info_id
   };
 
   try {
@@ -63,11 +65,66 @@ async function createURL(postData) {
   }
 }
 
-// Function to get a short URL by its original URL
+// Function to get a short URL info by its original URL
+const getShortURLIdInfoByOriginalURL = async (originalURL) => {
+  const urlSQL = `
+    SELECT url_info_id
+    FROM short_urls 
+    WHERE original_url = :original_url
+  `;
+
+  let params = {
+    original_url: originalURL,
+  };
+
+  try {
+    const results = await database.query(urlSQL, params);
+    if (results.length > 0) {
+      return results[0][0].url_info_id;
+    } else {
+      console.log("short_code not found in the database.");
+      return null;
+    }
+  } catch (err) {
+    console.log("Error while retrieving original URL from the database.");
+    console.log(err);
+    return null;
+  }
+};
+
+
+// Function to get a short URL info by its original URL
+const getShortURLIdInfoByShortCode = async (shortcode) => {
+  const urlSQL = `
+    SELECT url_info_id
+    FROM short_urls 
+    WHERE short_code = :short_code
+  `;
+
+  let params = {
+    short_code: shortcode,
+  };
+
+  try {
+    const results = await database.query(urlSQL, params);
+    if (results.length > 0) {
+      return results[0][0].url_info_id;
+    } else {
+      console.log("short_code not found in the database.");
+      return null;
+    }
+  } catch (err) {
+    console.log("Error while retrieving original URL from the database.");
+    console.log(err);
+    return null;
+  }
+};
+
+// Function to get a short URL info by its original URL
 const getShortURLByOriginalURL = async (originalURL) => {
   const urlSQL = `
     SELECT short_code
-    FROM short_url 
+    FROM short_urls 
     WHERE original_url = :original_url
   `;
 
@@ -90,25 +147,6 @@ const getShortURLByOriginalURL = async (originalURL) => {
   }
 };
 
-// Function to increment clicks for a short code
-const incrementClicks = async (shortcode) => {
-  const updateSQL = `
-    UPDATE short_url
-    SET numofhits = numofhits + 1
-    WHERE short_code = :short_code
-  `;
-
-  let params = {
-    short_code: shortcode,
-  };
-
-  try {
-    await database.query(updateSQL, params);
-  } catch (err) {
-    console.log("Error while incrementing clicks for the short URL.");
-    console.log(err);
-  }
-};
 
 // Function to get the click count for a short code
 const getClicks = async (shortcode) => {
@@ -140,10 +178,10 @@ const getClicks = async (shortcode) => {
 // Function to get the 10 most recent records with click counts
 const getRecentURLs = async () => {
   const recentURLsSQL = `
-    SELECT original_url, short_code, numofhits, datecreated, datelastvisited, user_id, username
-    FROM short_url
-    JOIN user USING (user_id)
-    ORDER BY datelastvisited DESC
+    SELECT s.original_url, s.short_code, i.num_hits, i.date_created, i.last_date_visited, i.is_active
+    FROM short_urls s
+    INNER JOIN urls_info i ON s.url_info_id = i.url_info_id
+    ORDER BY i.last_date_visited DESC
   `;
 
   try {
@@ -184,7 +222,7 @@ const deleteRedirect = async (shortcode) => {
 // Function to delete a URL redirect by shortcode
 const getIdByShortcode = async (shortcode) => {
   const deleteSQL = `
-    SELECT user_id FROM short_url
+    SELECT user_id FROM short_urls
     WHERE short_code = :short_code;
   `;
 
@@ -201,38 +239,16 @@ const getIdByShortcode = async (shortcode) => {
   }
 };
 
-// Function to update the datelastvisited field for a given shortcode
-const updateLastVisited = async (shortcode, lastVisited) => {
-  const updateLastVisitedSQL = `
-    UPDATE short_url
-    SET datelastvisited = :lastvisited  
-    WHERE short_code = :short_code;
-  `;
 
-  let params = {
-    short_code: shortcode,
-    lastVisited: lastVisited,
-  };
-
-  try {
-    const result = await database.query(updateLastVisitedSQL, params);
-    console.log(result);
-    return result;
-  } catch (err) {
-    console.log("Error while updating last visited timestamp in the database.");
-    console.log(err);
-    throw err;
-  }
-};
 
 module.exports = {
   getOriginalURL,
   createURL,
-  getShortURLByOriginalURL,
-  incrementClicks,
+  getShortURLIdInfoByOriginalURL,
   getClicks,
   getRecentURLs,
   deleteRedirect,
   getIdByShortcode,
-  updateLastVisited,
+  getShortURLByOriginalURL,
+  getShortURLIdInfoByShortCode
 };

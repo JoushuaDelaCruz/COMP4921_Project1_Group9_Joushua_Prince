@@ -5,11 +5,10 @@ const db_shortener = include("database/db_shortener");
 
 const shortId = require("shortid");
 
-
 // Define a function to truncate a URL to a specific length
-function truncateURL(url, maxLength = 35) {
+function truncateURL(url, maxLength = 30) {
   if (url.length > maxLength) {
-    return url.substring(0, maxLength) + '...';
+    return url.substring(0, maxLength) + "...";
   }
   return url;
 }
@@ -19,9 +18,9 @@ router.post("/", async (req, res) => {
 
   const fullUrl = req.body.fullUrl;
   const user_id = req.session ? req.session.user_id : null;
-  userSignedIn = req.session ? req.session.user_id : -1
+  userSignedIn = req.session ? req.session.user_id : -1;
 
-  console.log("Current user" + user_id)
+  console.log("Current user" + user_id);
 
   const existingShortURL = await db_shortener.getShortURLByOriginalURL(fullUrl);
 
@@ -40,11 +39,9 @@ router.post("/", async (req, res) => {
       fullUrl,
       recentURLs,
       truncateURL,
-      userSignedIn
+      userSignedIn,
     });
   } else {
-
-
     // Generate a unique short ID using shortid
     const shortcode = shortId.generate();
     // Ensure that the short URL starts with "http://"
@@ -52,7 +49,7 @@ router.post("/", async (req, res) => {
     var results = await db_shortener.createURL({
       originalURL: fullUrl,
       shortURL: shortURL,
-      user_id: user_id
+      user_id: user_id,
     });
 
     if (results) {
@@ -64,19 +61,16 @@ router.post("/", async (req, res) => {
         fullUrl: fullUrl,
         recentURLs: recentURLs,
         truncateURL,
-        userSignedIn
+        userSignedIn,
       });
-
     }
   }
 });
 
-
-
 router.get("/:shortcode", async (req, res) => {
   const shortcode = req.params.shortcode;
   const originalURL = await db_shortener.getOriginalURL(shortcode);
-  console.log("Redirecting to" + originalURL)
+  console.log("Redirecting to" + originalURL);
 
   if (originalURL) {
     res.redirect(originalURL);
@@ -90,14 +84,14 @@ router.get("/:shortcode", async (req, res) => {
 
 // Delete Redirect
 router.post("/delete/:shortcode", async (req, res) => {
-  console.log("Now deleting")
+  console.log("Now deleting");
   const shortcode = req.params.shortcode;
-  userSignedIn = req.session ? req.session.user_id : -1
+  userSignedIn = req.session ? req.session.user_id : -1;
   const user_id = req.session ? req.session.user_id : null;
 
   // Check if the user is the owner of the redirect
   const urlOwner = await db_shortener.getIdByShortcode(shortcode);
-  console.log("Owner is " + urlOwner)
+  console.log("Owner is " + urlOwner);
 
   if (user_id !== urlOwner) {
     return res.status(403).send("Unauthorized to delete this redirect");
@@ -106,10 +100,6 @@ router.post("/delete/:shortcode", async (req, res) => {
   // Delete the redirect permanently from the database
   await db_shortener.deleteRedirect(shortcode);
   res.redirect("/home?shortener=true");
-
 });
-
-
-
 
 module.exports = router;

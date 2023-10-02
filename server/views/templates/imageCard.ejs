@@ -41,7 +41,7 @@
           <% if (image.uploader_id === userSignedIn){ %>
             <form action="/imageUrls/activate" class="d-flex justify-content-center my-3" method="POST">
               <input type="hidden" name="url_info_id" value="<%= image.url_info_id %>"/>
-              <button class="btn btn-success"> Activate </button>
+              <button class="btn btn-info"> Activate </button>
             </form>
           <% } %>
         </div>

@@ -1,6 +1,5 @@
 const database = include("mySQLDatabaseConnection");
 
-
 const getOriginalURL = async (postData) => {
   const urlSQL = `
       SELECT original_url
@@ -15,12 +14,12 @@ const getOriginalURL = async (postData) => {
   try {
     const results = await database.query(urlSQL, params);
     if (results.length > 0) {
-      const originalURL = results[0][0].original_url;;
+      const originalURL = results[0][0].original_url;
       return originalURL;
     } else {
       console.log("Short URL not found in the database.");
     }
-    console.log("database result " + results[0])
+    console.log("database result " + results[0]);
   } catch (err) {
     console.log("Error while retrieving original URL from the database.");
     console.log(err);
@@ -28,19 +27,14 @@ const getOriginalURL = async (postData) => {
   }
 };
 
-
-
 async function createURL(postData) {
-
   // Call the stored function to generate a unique short code
   const generateShortCodeQuery = `
       SELECT generateUniqueShortCode() AS shortCode;
   `;
   const shortCodeResult = await database.query(generateShortCodeQuery);
   const id = shortCodeResult[0][0].shortCode;
-  console.log(id)
-
-
+  console.log(id);
 
   let createURL = `
     INSERT INTO short_url (id,  original_url,short_code, user_id)
@@ -53,7 +47,7 @@ async function createURL(postData) {
     originalURL: postData.originalURL,
     shortURL: postData.shortURL,
     id: id,
-    user_id: postData.user_id
+    user_id: postData.user_id,
   };
 
   try {
@@ -95,8 +89,6 @@ const getShortURLByOriginalURL = async (originalURL) => {
     return null;
   }
 };
-
-
 
 // Function to increment clicks for a short code
 const incrementClicks = async (shortcode) => {
@@ -148,12 +140,11 @@ const getClicks = async (shortcode) => {
 // Function to get the 10 most recent records with click counts
 const getRecentURLs = async () => {
   const recentURLsSQL = `
-    SELECT original_url, short_code, numofhits, datecreated, datelastvisited
+    SELECT original_url, short_code, numofhits, datecreated, datelastvisited, user_id, username
     FROM short_url
+    JOIN user USING (user_id)
     ORDER BY datelastvisited DESC
-    LIMIT 10;
   `;
-
 
   try {
     const results = await database.query(recentURLsSQL);
@@ -178,7 +169,7 @@ const deleteRedirect = async (shortcode) => {
   try {
     const results = await database.query(deleteSQL, params);
     if (results.affectedRows > 0) {
-      console.log("URL deleted")
+      console.log("URL deleted");
       return true; // URL deleted successfully
     } else {
       return false; // URL with the specified shortcode was not found
@@ -188,7 +179,6 @@ const deleteRedirect = async (shortcode) => {
     console.log(err);
     return 0;
   }
-
 };
 
 // Function to delete a URL redirect by shortcode
@@ -203,19 +193,17 @@ const getIdByShortcode = async (shortcode) => {
   };
   try {
     const results = await database.query(deleteSQL, params);
-    return results[0][0].user_id
+    return results[0][0].user_id;
   } catch (err) {
     console.log("Error while deleting URL from the database.");
     console.log(err);
     return 0;
   }
-
 };
-
 
 // Function to update the datelastvisited field for a given shortcode
 const updateLastVisited = async (shortcode) => {
-  console.log("UPDATING")
+  console.log("UPDATING");
   const updateLastVisitedSQL = `
     UPDATE short_url
     SET datelastvisited = NOW()  
@@ -228,7 +216,7 @@ const updateLastVisited = async (shortcode) => {
 
   try {
     const result = await database.query(updateLastVisitedSQL, params);
-    console.log(result)
+    console.log(result);
     return result;
   } catch (err) {
     console.log("Error while updating last visited timestamp in the database.");
@@ -236,7 +224,6 @@ const updateLastVisited = async (shortcode) => {
     throw err;
   }
 };
-
 
 module.exports = {
   getOriginalURL,
@@ -247,5 +234,5 @@ module.exports = {
   getRecentURLs,
   deleteRedirect,
   getIdByShortcode,
-  updateLastVisited
+  updateLastVisited,
 };

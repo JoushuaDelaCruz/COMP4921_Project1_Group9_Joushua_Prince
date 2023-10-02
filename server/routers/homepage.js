@@ -54,7 +54,6 @@ router.get("/", async (req, res) => {
     return;
   }
   const images = await db_imageUrl.getUploadedImages();
-  console.log(images);
   const bundle = {
     images: images,
     isUserSignedIn: authenticated,

@@ -69,6 +69,7 @@ router.post("/deactivate", async (req, res) => {
   await db_urlInfo.deactivateUrl(url_info_id);
   if (image_id) {
     res.redirect(`/imageUrls?image=${image_id}`);
+    return;
   }
   res.redirect("/home");
 });
@@ -79,6 +80,7 @@ router.post("/activate", async (req, res) => {
   await db_urlInfo.activateUrl(url_info_id);
   if (image_id) {
     res.redirect(`/imageUrls?image=${image_id}`);
+    return;
   }
   res.redirect("/home");
 });

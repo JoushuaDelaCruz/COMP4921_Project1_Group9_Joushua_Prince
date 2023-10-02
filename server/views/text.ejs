@@ -20,13 +20,13 @@
           <form action="/textUrls/deactivate" method="POST">
               <input type="hidden" name="url_info_id" value="<%= url_info_id %>"/>
               <input type="hidden" name="text_id" value="<%= text_id %>"/>
-              <button class="btn btn-danger"> Deactivate </button>
+              <button class="btn btn-success"> Deactivate </button>
           </form>
       <% } else { %>
           <form action="/textUrls/activate" method="POST">
               <input type="hidden" name="url_info_id" value="<%= url_info_id %>"/>
               <input type="hidden" name="text_id" value="<%= text_id %>"/>
-              <button class="btn btn-success"> Activate </button>
+              <button class="btn btn-info"> Activate </button>
           </form>
       <% } %>
   <% } %>

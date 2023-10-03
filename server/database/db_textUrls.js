@@ -42,6 +42,7 @@ const getUploadedTexts = async () => {
         	FROM text_url as text
         	JOIN user on uploader_id = user_id
         	JOIN urls_info as ui on ui.url_info_id = text.url_info_id
+          ORDER BY date_created DESC
     	`;
   try {
     const results = await database.query(textsSQL);

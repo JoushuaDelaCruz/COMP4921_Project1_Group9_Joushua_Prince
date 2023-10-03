@@ -53,6 +53,7 @@ const getUploadedImages = async () => {
   FROM image_url as image
   JOIN user on uploader_id = user_id
   JOIN urls_info using (url_info_id)
+  ORDER BY date_created DESC
 	`;
 
   try {
@@ -88,8 +89,34 @@ const getImage = async (image_id) => {
   }
 };
 
+const isIdExists = async (id) => {
+  const imageSQL = `
+    SELECT image_id
+    FROM image_url
+    WHERE image_id = :image_id
+  `;
+
+  const param = {
+    image_id: id,
+  };
+
+  try {
+    const results = await database.query(imageSQL, param);
+    console.log(results);
+    if (results[0][0]) {
+      return true;
+    }
+    return false;
+  } catch (err) {
+    console.log("Error failed to retrieve image");
+    console.log(err);
+    return;
+  }
+};
+
 module.exports = {
   uploadImage,
   getUploadedImages,
   getImage,
+  isIdExists,
 };

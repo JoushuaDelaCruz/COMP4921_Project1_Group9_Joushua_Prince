@@ -167,11 +167,11 @@ const getClicks = async (shortcode) => {
 // Function to get the 10 most recent records with click counts
 const getRecentURLs = async () => {
   const recentURLsSQL = `
-    SELECT s.original_url, s.short_code, i.num_hits, i.date_created, i.last_date_visited, i.is_active, u.username, u.user_id
+    SELECT s.original_url, s.short_code, i.num_hits, i.date_created, i.last_date_visited, i.is_active, u.username, u.user_id, i.url_info_id
     FROM short_urls s
     JOIN urls_info i ON s.url_info_id = i.url_info_id
     JOIN user u ON s.user_id = u.user_id 
-    ORDER BY i.last_date_visited DESC
+    ORDER BY i.date_created DESC
   `;
 
   try {

@@ -18,7 +18,9 @@ cloudinary.config({
 
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage
+});
 
 router.get("/", async (req, res) => {
   const image_id = req.query.image;
@@ -47,12 +49,12 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   const image = "data:image/png;base64," + buffer;
   cloudinary.uploader.upload(image).then(async (response) => {
     const uploader_id = req.session.user_id;
-    const image_id = shortId.generate();
+    // const image_id = shortId.generate();
     const public_id = response.public_id;
     const uploadData = {
       uploader_id: uploader_id,
       cloudinary_public_id: public_id,
-      image_id: image_id,
+      // image_id: image_id,
     };
     const successful = await db_imageUrl.uploadImage(uploadData);
     if (!successful) {

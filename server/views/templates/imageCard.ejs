@@ -1,11 +1,11 @@
 <% if (image.is_active === 1){ %>
   <a href="/imageUrls?image=<%- image.image_id %>" class="link-underline link-underline-opacity-0">
-    <div class="card border-success" style="width: 18rem">
+    <div class="card border-primary" style="width: 18rem">
         <div class="bg-image w-100 hover-overlay ripple">
           <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', 
           {class: "card-img-top img-thumbnail rounded mx-auto d-block", style:"max-height: 20rem"}).toHtml());</script>
         </div>
-        <div class="card-body">
+        <div class="card-body text-primary-emphasis">
           <h5 class="card-title">Author: <%- image.username %> </h5>
           <h6 class="card-subtitle mb-2 text-body-secondary">Created at: <%- image.date_created %> </h6>
           <p class="card-text"><small class="text-body-secondary">Number of hits: <%- image.num_hits %> </small></p>
@@ -30,7 +30,7 @@
         <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image.cloudinary_public_id %>', 
         {class: "card-img-top img-thumbnail rounded mx-auto d-block", style:"max-height: 20rem"}).toHtml());</script>
       </div>
-      <div class="card-body">
+      <div class="card-body text-body-secondary">
         <h5 class="card-title">Author: <%- image.username %> </h5>
         <h6 class="card-subtitle mb-2 text-body-secondary">Created at: <%- image.date_created %> </h6>
         <p class="card-text"><small class="text-body-secondary">Number of hits: <%- image.num_hits %> </small></p>

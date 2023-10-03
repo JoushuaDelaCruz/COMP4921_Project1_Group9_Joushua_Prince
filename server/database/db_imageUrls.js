@@ -3,6 +3,16 @@ const urlInfo = require("./db_urls_info");
 
 const uploadImage = async (data) => {
   const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
+  console.log("LOGGING POST DATA" + postData.url_info_id);
+
+  // Call the stored function to generate a unique short code
+  const generateShortCodeQuery = `
+      SELECT generateUniqueShortCodeForImage() AS shortCode;
+  `;
+  const shortCodeResult = await database.query(generateShortCodeQuery);
+  const image_id = shortCodeResult[0][0].shortCode;
+  console.log(id);
+
   const uploadImageSQL = `
     INSERT INTO image_url
     (image_id, uploader_id, cloudinary_public_id, url_info_id)
@@ -11,7 +21,7 @@ const uploadImage = async (data) => {
   `;
 
   const params = {
-    image_id: data.image_id,
+    image_id: image_id,
     uploader_id: data.uploader_id,
     cloudinary_public_id: data.cloudinary_public_id,
     url_info_id: urlInfoFk,

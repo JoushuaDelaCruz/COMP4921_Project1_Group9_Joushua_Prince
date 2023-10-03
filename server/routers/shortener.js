@@ -19,14 +19,13 @@ router.post("/", async (req, res) => {
 
   const fullUrl = req.body.fullUrl;
   const user_id = req.session ? req.session.user_id : null;
-  userSignedIn = req.session ? req.session.user_id : -1;
+  const userSignedIn = req.session ? req.session.user_id : -1;
 
   console.log("Current user" + user_id);
 
   const existingShortURL = await db_shortener.getShortURLByOriginalURL(fullUrl);
 
   if (existingShortURL) {
-
     const recentURLs = await db_shortener.getRecentURLs();
     console.log("logging recents" + recentURLs);
 
@@ -52,11 +51,10 @@ router.post("/", async (req, res) => {
         originalURL: fullUrl,
         shortURL: shortURL,
         user_id: user_id,
-        url_info_id: url_info_id
+        url_info_id: url_info_id,
       });
     } catch (error) {
       console.error("Error creating URL:", error);
-
     }
 
     if (results) {
@@ -73,64 +71,33 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:shortcode", async (req, res) => {
-  const shortcode = req.params.shortcode;
-  const originalURL = await db_shortener.getOriginalURL(shortcode);
-  console.log("Redirecting to" + originalURL);
-  const url_info_id = await db_shortener.getShortURLIdInfoByOriginalURL(originalURL);
-  console.log("UPDATE MHANI " + url_info_id)
-
-  if (originalURL) {
-    res.redirect(originalURL);
-    await db_urls_info.urlClicked(url_info_id)
-  } else {
-    // Handle the case where the shortcode doesn't exist
-    res.status(404).send("Short URL not found");
+router.get("/", async (req, res) => {
+  const short_code = req.query.short_code;
+  const urlData = await db_shortener.getOriginalURL(short_code);
+  const user_id = req.session ? req.session.user_id : -1;
+  if (!urlData[0]) {
+    res.redirect("/404");
+    return;
   }
+  const uploader_id = urlData[0].user_id;
+  const owner = uploader_id === user_id;
+  if (urlData[0].is_active === 0 && !owner) {
+    res.render("inactive");
+    return;
+  }
+  await db_urls_info.urlClicked(urlData[0].url_info_id);
+  res.redirect(urlData[0].original_url);
 });
 
-
-
-
-router.post("/deactivate/:shortcode", async (req, res) => {
-  console.log("Now deacvating");
-  const shortcode = req.params.shortcode;
-  userSignedIn = req.session ? req.session.user_id : -1;
-  const user_id = req.session ? req.session.user_id : null;
-  console.log(user_id)
-
-  // Check if the user is the owner of the redirect
-  const urlOwner = await db_shortener.getIdByShortcode(shortcode);
-  console.log("Owner is " + urlOwner);
-
-  if (user_id !== urlOwner) {
-    return res.status(403).send("Unauthorized to Deactivate this redirect");
-  }
-
-  const urls_info_id = await db_shortener.getShortURLIdInfoByShortCode(shortcode);
-  await db_urls_info.deactivateUrl(urls_info_id);
-  res.redirect("/home?shortener=true");
+router.post("/deactivate", async (req, res) => {
+  const url_info_id = req.body.url_info_id;
+  await db_urls_info.deactivate(url_info_id);
+  res.redirect("/home");
 });
 
-
-
-router.post("/activate/:shortcode", async (req, res) => {
-  console.log("Now deacvating");
-  const shortcode = req.params.shortcode;
-  userSignedIn = req.session ? req.session.user_id : -1;
-  const user_id = req.session ? req.session.user_id : null;
-  console.log(user_id)
-
-  // Check if the user is the owner of the redirect
-  const urlOwner = await db_shortener.getIdByShortcode(shortcode);
-  console.log("Owner is " + urlOwner);
-
-  if (user_id !== urlOwner) {
-    return res.status(403).send("Unauthorized to Activate this redirect");
-  }
-
-  const urls_info_id = await db_shortener.getShortURLIdInfoByShortCode(shortcode);
-  await db_urls_info.activateUrl(urls_info_id);
-  res.redirect("/home?shortener=true");
+router.post("/activate", async (req, res) => {
+  const url_info_id = req.body.url_info_id;
+  await db_urls_info.activate(url_info_id);
+  res.redirect("/home");
 });
 module.exports = router;

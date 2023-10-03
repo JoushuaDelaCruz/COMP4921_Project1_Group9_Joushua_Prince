@@ -2,7 +2,7 @@ require("../utils");
 const express = require("express");
 const router = express.Router();
 const db_shortener = include("database/db_shortener");
-const db_urls_info = include("database/db_urls_info");
+const db_urls_info = include("/database/db_urls_info");
 
 const shortId = require("shortid");
 
@@ -91,13 +91,13 @@ router.get("/", async (req, res) => {
 
 router.post("/deactivate", async (req, res) => {
   const url_info_id = req.body.url_info_id;
-  await db_urls_info.deactivate(url_info_id);
-  res.redirect("/home");
+  await db_urls_info.deactivateUrl(url_info_id);
+  res.redirect("/home?shortener=true");
 });
 
 router.post("/activate", async (req, res) => {
   const url_info_id = req.body.url_info_id;
-  await db_urls_info.activate(url_info_id);
-  res.redirect("/home");
+  await db_urls_info.activateUrl(url_info_id);
+  res.redirect("/home?shortener=true");
 });
 module.exports = router;

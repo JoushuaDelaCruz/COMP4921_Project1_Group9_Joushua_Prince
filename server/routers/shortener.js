@@ -91,13 +91,13 @@ router.get("/", async (req, res) => {
 
 router.post("/deactivate", async (req, res) => {
   const url_info_id = req.body.url_info_id;
-  await db_urls_info.deactivate(url_info_id);
+  await db_urls_info.deactivateUrl(url_info_id);
   res.redirect("/home");
 });
 
 router.post("/activate", async (req, res) => {
   const url_info_id = req.body.url_info_id;
-  await db_urls_info.activate(url_info_id);
+  await db_urls_info.activateUrl(url_info_id);
   res.redirect("/home");
 });
 module.exports = router;

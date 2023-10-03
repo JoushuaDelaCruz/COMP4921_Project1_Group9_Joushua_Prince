@@ -17,8 +17,7 @@ const uploadText = async (data) => {
     url_info_id: urlInfoFk,
   };
   try {
-    const results = await database.query(uploadTextSQL, params);
-    console.log("Successfully created text");
+    await database.query(uploadTextSQL, params);
     return true;
   } catch (err) {
     console.log("Error inserting text");
@@ -46,7 +45,6 @@ const getUploadedTexts = async () => {
     	`;
   try {
     const results = await database.query(textsSQL);
-    console.log("Successfully retrieves all uploaded texts");
     return results[0];
   } catch (err) {
     console.log("Error failed to retrieve uploaded texts");
@@ -76,7 +74,6 @@ const getText = async (text_id) => {
   };
   try {
     const results = await database.query(textSQL, params);
-    console.log("Successfully retrieves text");
     return results[0];
   } catch (err) {
     console.log("Error failed to retrieve text");

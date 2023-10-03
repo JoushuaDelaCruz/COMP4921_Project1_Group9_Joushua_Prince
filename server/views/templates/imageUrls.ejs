@@ -2,7 +2,7 @@
     $.cloudinary.config({ cloud_name: '<%= process.env.CLOUDINARY_CLOUD_NAME %>', secure: true});
 </script>
 <% if (isUserSignedIn) { %> 
-    <form action="/imageUrls/upload" method="POST" enctype="multipart/form-data" class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-2 bg-opacity-75 border border-dark-subtle">
+    <form action="/imageUrls/upload" method="POST" enctype="multipart/form-data" class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-2 bg-opacity-75 border border-dark-subtle needs-validation">
         <div class="col-lg-6 mx-auto" style="max-height: 25%;">
     
             <!-- Upload image input-->
@@ -15,15 +15,23 @@
                     <small class="text-uppercase font-weight-bold text-muted text-light">Choose file</small></label>
                 </div>
             </div>
-    
             <!-- Uploaded image area-->
             <div class="image-area mt-4">
-                <img id="imageResult" alt="" class="img-thumbnail rounded mx-auto d-block shadow-sm" style="max-height: 30rem;"></div>
+                <img id="imageResult" alt="" class="img-thumbnail rounded mx-auto d-block shadow-sm" style="max-height: 30rem;">
+            </div>
+            <div class="<%= locals.error ? 'd-flex' : 'd-none' %> flex-wrap flex-column align-items-center align-self-center align-content-center mt-5" id="customized_name">
+                <label for="customized_name" class="fs-6 fw-medium">Customized Name </label>
+                <input required placeholder="Enter a customized name" type="text" name="customized_name" class="form-control col border border-2 <%= locals.error ? 'is-invalid border-danger' : 'border-dark-subtle' %>" >
+                <div class="invalid-feedback">
+                    <%= locals.error %>
+                </div>
+            </div>
             <div class="d-none justify-content-center" id="upload-button">
                 <button class="btn btn-primary mt-5 px-5">
                     Upload
                 </button>
             </div>
+            
         </div>
     </form>
  <% } %>
@@ -46,6 +54,11 @@
         uploadButton.classList.remove('d-none');
         uploadButton.classList.add('d-flex');
     }
+    const showCustomizedField = () => {
+        const customizedField = document.getElementById('customized_name');
+        customizedField.classList.remove('d-none');
+        customizedField.classList.add('d-flex');
+    }
 	const showFileName = () => {
         const input = document.getElementById('upload');
 	    const infoArea = document.getElementById('upload-label');
@@ -62,6 +75,7 @@
 			reader.readAsDataURL(input.files[0]);
 			}
             showFileName()
+            showCustomizedField()
             showUploadButton()
         }
   </script>

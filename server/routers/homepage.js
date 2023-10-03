@@ -24,7 +24,7 @@ function truncateURL(url, maxLength = 35) {
 }
 
 router.get("/", async (req, res) => {
-  const { shortener, text } = req.query;
+  const { shortener, text, error } = req.query;
   const authenticated = req.session ? req.session.authenticated : false;
   const recentURLs = await db_shortener.getRecentURLs();
   if (shortener) {
@@ -36,6 +36,7 @@ router.get("/", async (req, res) => {
       textClass: "text-light",
       truncateURL: truncateURL,
       userSignedIn: req.session ? req.session.user_id : -1,
+      error: error,
     };
     res.render("index", bundle);
     return;
@@ -49,6 +50,7 @@ router.get("/", async (req, res) => {
       shortenerClass: "text-light",
       textClass: "active",
       userSignedIn: req.session ? req.session.user_id : -1,
+      error: error,
     };
     res.render("index", bundle);
     return;
@@ -61,6 +63,7 @@ router.get("/", async (req, res) => {
     shortenerClass: "text-light",
     textClass: "text-light",
     userSignedIn: req.session ? req.session.user_id : -1,
+    error: error,
   };
   res.render("index", bundle);
   return;

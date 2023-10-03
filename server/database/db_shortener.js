@@ -2,8 +2,9 @@ const database = include("mySQLDatabaseConnection");
 
 const getOriginalURL = async (postData) => {
   const urlSQL = `
-      SELECT original_url
+      SELECT original_url, url_info_id, user_id, is_active
       FROM short_urls 
+      JOIN urls_info USING (url_info_id)
       WHERE short_code = :short_code
       `;
 
@@ -13,13 +14,7 @@ const getOriginalURL = async (postData) => {
 
   try {
     const results = await database.query(urlSQL, params);
-    if (results.length > 0) {
-      const originalURL = results[0][0].original_url;
-      return originalURL;
-    } else {
-      console.log("Short URL not found in the database.");
-    }
-    console.log("database result " + results[0]);
+    return results[0];
   } catch (err) {
     console.log("Error while retrieving original URL from the database.");
     console.log(err);
@@ -28,7 +23,6 @@ const getOriginalURL = async (postData) => {
 };
 
 async function createURL(postData) {
-
   console.log("LOGGING POST DATA" + postData.url_info_id);
 
   // Call the stored function to generate a unique short code
@@ -49,14 +43,11 @@ async function createURL(postData) {
     shortURL: postData.shortURL,
     id: id,
     user_id: postData.user_id,
-    url_info_id: postData.url_info_id
+    url_info_id: postData.url_info_id,
   };
 
   try {
     await database.query(createURL, params);
-
-    // console.log("Successfully recorded url");
-    // console.log(results[0]);
     return true;
   } catch (err) {
     console.log("Error inserting url");
@@ -91,7 +82,6 @@ const getShortURLIdInfoByOriginalURL = async (originalURL) => {
     return null;
   }
 };
-
 
 // Function to get a short URL info by its original URL
 const getShortURLIdInfoByShortCode = async (shortcode) => {
@@ -147,7 +137,6 @@ const getShortURLByOriginalURL = async (originalURL) => {
   }
 };
 
-
 // Function to get the click count for a short code
 const getClicks = async (shortcode) => {
   const clickSQL = `
@@ -178,9 +167,10 @@ const getClicks = async (shortcode) => {
 // Function to get the 10 most recent records with click counts
 const getRecentURLs = async () => {
   const recentURLsSQL = `
-    SELECT s.original_url, s.short_code, i.num_hits, i.date_created, i.last_date_visited, i.is_active
+    SELECT s.original_url, s.short_code, i.num_hits, i.date_created, i.last_date_visited, i.is_active, u.username, u.user_id
     FROM short_urls s
-    INNER JOIN urls_info i ON s.url_info_id = i.url_info_id
+    JOIN urls_info i ON s.url_info_id = i.url_info_id
+    JOIN user u ON s.user_id = u.user_id 
     ORDER BY i.last_date_visited DESC
   `;
 
@@ -239,8 +229,6 @@ const getIdByShortcode = async (shortcode) => {
   }
 };
 
-
-
 module.exports = {
   getOriginalURL,
   createURL,
@@ -250,5 +238,5 @@ module.exports = {
   deleteRedirect,
   getIdByShortcode,
   getShortURLByOriginalURL,
-  getShortURLIdInfoByShortCode
+  getShortURLIdInfoByShortCode,
 };

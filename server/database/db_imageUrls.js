@@ -83,7 +83,7 @@ const isIdExists = async (id) => {
   const imageSQL = `
     SELECT image_id
     FROM image_url
-    WHERE image_id = :image_id
+    WHERE image_id = :image_id;
   `;
 
   const param = {
@@ -92,11 +92,7 @@ const isIdExists = async (id) => {
 
   try {
     const results = await database.query(imageSQL, param);
-    console.log(results);
-    if (results[0][0]) {
-      return true;
-    }
-    return false;
+    return results[0][0] !== undefined;
   } catch (err) {
     console.log("Error failed to retrieve image");
     console.log(err);

@@ -11,9 +11,6 @@ exports.insertUrlInfoAndGetUrlInfoId = async () => {
 
   try {
     const results = await database.query(newUrl, params);
-
-    console.log("Successfully created an url_info");
-    console.log(results[0]);
     return results[0].insertId;
   } catch (err) {
     console.log("Error inserting new row for url_info");
@@ -36,8 +33,6 @@ exports.urlClicked = async (url_info_id) => {
 
   try {
     const results = await database.query(updateSQL, params);
-    console.log("Successfully updated urls_info");
-    console.log(results[0]);
     return true;
   } catch (err) {
     console.log("Error failed to update urls_info");
@@ -57,9 +52,7 @@ exports.deactivateUrl = async (url_info_id) => {
   };
 
   try {
-    const results = await database.query(deactivateSQL, params);
-    console.log("Successfully deactivated image");
-    console.log(results[0]);
+    await database.query(deactivateSQL, params);
     return true;
   } catch (err) {
     console.log("Error failed to deactivate image");
@@ -79,9 +72,7 @@ exports.activateUrl = async (url_info_id) => {
   };
 
   try {
-    const results = await database.query(activateSQL, params);
-    console.log("Successfully activated image");
-    console.log(results[0]);
+    await database.query(activateSQL, params);
     return true;
   } catch (err) {
     console.log("Error failed to activate image");
@@ -100,9 +91,7 @@ exports.deleteUrlInfo = async (url_info_id) => {
   };
 
   try {
-    const results = await database.query(deleteSQL, params);
-    console.log("Successfully deleted url_info");
-    console.log(results[0]);
+    await database.query(deleteSQL, params);
     return true;
   } catch (err) {
     console.log("Error failed to delete url_info");

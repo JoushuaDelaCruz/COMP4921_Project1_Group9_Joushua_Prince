@@ -57,7 +57,7 @@ app.use("/imageUrls", imageRouter);
 app.use("/home", homeRouter);
 
 app.get("/", (req, res) => {
-  res.redirect("/home");
+  res.redirect("/home?image=true");
 });
 
 app.get("*", (req, res) => {

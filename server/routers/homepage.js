@@ -24,11 +24,11 @@ function truncateURL(url, maxLength = 35) {
 }
 
 router.get("/", async (req, res) => {
-  const { shortener, text, error } = req.query;
+  const { shortener, text, image, error } = req.query;
   const user_id = req.session ? req.session.user_id : -1;
   const authenticated = req.session ? req.session.authenticated : false;
   const onlyUserContent = req.session ? req.session.onlyUserContent : false;
-  if (shortener) {
+  if (shortener === "true") {
     const recentURLs = onlyUserContent
       ? await db_shortener.getUserRecentUrls(user_id)
       : await db_shortener.getRecentURLs();
@@ -46,7 +46,7 @@ router.get("/", async (req, res) => {
     res.render("index", bundle);
     return;
   }
-  if (text) {
+  if (text === "true") {
     const texts = onlyUserContent
       ? await db_textUrl.getUserTexts(user_id)
       : await db_textUrl.getUploadedTexts();
@@ -63,21 +63,24 @@ router.get("/", async (req, res) => {
     res.render("index", bundle);
     return;
   }
-  const images = onlyUserContent
-    ? await db_imageUrl.getUserImages(user_id)
-    : await db_imageUrl.getUploadedImages();
-  const bundle = {
-    onlyUserContent: onlyUserContent,
-    images: images,
-    isUserSignedIn: authenticated,
-    imageClass: "active",
-    shortenerClass: "text-light",
-    textClass: "text-light",
-    userSignedIn: req.session ? req.session.user_id : -1,
-    error: error,
-  };
-  res.render("index", bundle);
-  return;
+  if (image === "true") {
+    const images = onlyUserContent
+      ? await db_imageUrl.getUserImages(user_id)
+      : await db_imageUrl.getUploadedImages();
+    const bundle = {
+      onlyUserContent: onlyUserContent,
+      images: images,
+      isUserSignedIn: authenticated,
+      imageClass: "active",
+      shortenerClass: "text-light",
+      textClass: "text-light",
+      userSignedIn: req.session ? req.session.user_id : -1,
+      error: error,
+    };
+    res.render("index", bundle);
+    return;
+  }
+  res.redirect("404");
 });
 
 router.post("/onlyUserContent", (req, res) => {

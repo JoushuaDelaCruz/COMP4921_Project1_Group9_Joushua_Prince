@@ -31,7 +31,7 @@ router.post("/user", async (req, res) => {
         req.session.user = results[0].username;
         req.session.user_id = results[0].user_id;
         req.session.cookie.maxAge = expireTime;
-        res.redirect("/home");
+        res.redirect("/home?image=true");
         return;
         // Handle the login success case here
       } else {

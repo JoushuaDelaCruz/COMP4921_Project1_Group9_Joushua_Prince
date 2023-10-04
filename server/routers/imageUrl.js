@@ -5,7 +5,6 @@ const router = express.Router();
 const db_urlInfo = include("database/db_urls_info");
 const id_checker = require("./modules/idChecker");
 const db_imageUrl = include("database/db_imageUrls");
-const shortId = require("shortid");
 
 const cloudinary_name = process.env.CLOUDINARY_CLOUD_NAME;
 
@@ -48,10 +47,10 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   }
   const buffer = req.file.buffer.toString("base64");
   const image = "data:image/png;base64," + buffer;
-  const customized_name = req.body.customized_name;
+  const customized_id = req.body.customized_id;
   const nameErr = await id_checker.checkName(
     db_imageUrl.isIdExists,
-    customized_name
+    customized_id
   );
   if (nameErr) {
     res.redirect(`/home?image=true&error=${nameErr}`);
@@ -63,6 +62,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
     const uploadData = {
       uploader_id: uploader_id,
       cloudinary_public_id: public_id,
+      customized_id: customized_id,
     };
     const successful = await db_imageUrl.uploadImage(uploadData);
     if (!successful) {

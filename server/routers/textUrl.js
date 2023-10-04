@@ -3,7 +3,6 @@ const router = express.Router();
 const db_textUrl = include("database/db_textUrls");
 const id_checker = require("./modules/idChecker");
 const db_urlInfo = include("database/db_urls_info");
-const shortId = require("shortid");
 
 router.get("/", async (req, res) => {
   const text_id = req.query.text;
@@ -29,19 +28,18 @@ router.post("/upload", async (req, res) => {
   const text = req.body.text;
   const title = req.body.title || "Untitled";
   const uploader_id = req.session.user_id;
-  const customized_name = req.body.customized_name;
+  const customized_id = req.body.customized_id;
   const nameErr = await id_checker.checkName(
     db_textUrl.isIdExists,
-    customized_name
+    customized_id
   );
   if (nameErr) {
     res.redirect(`/home?text=true&error=${nameErr}`);
     return;
   }
-  const text_id = customized_name || shortId.generate();
   const textData = {
     uploader_id: uploader_id,
-    text_id: text_id,
+    customized_id: customized_id,
     text: text,
     title: title,
   };

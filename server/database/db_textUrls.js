@@ -3,6 +3,14 @@ const urlInfo = require("./db_urls_info");
 
 const uploadText = async (data) => {
   const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
+  const generateShortCodeQuery = `
+  SELECT generateUniqueShortCodeForText() AS shortCode;
+  `;
+  let id = data.customized_id;
+  if (!id) {
+    const generatedCode = await database.query(generateShortCodeQuery);
+    id = generatedCode[0][0].shortCode;
+  }
   const uploadTextSQL = `
     	INSERT INTO text_url
     	(text_id, uploader_id, content, title, url_info_id)

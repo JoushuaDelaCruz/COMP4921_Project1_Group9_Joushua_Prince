@@ -32,7 +32,7 @@ exports.urlClicked = async (url_info_id) => {
   };
 
   try {
-    const results = await database.query(updateSQL, params);
+    await database.query(updateSQL, params);
     return true;
   } catch (err) {
     console.log("Error failed to update urls_info");

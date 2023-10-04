@@ -53,11 +53,35 @@ async function _createURL(postData) {
   }
 }
 
+const getUserRecentUrls = async (user_id) => {
+  const recentURLsSQL = `
+    SELECT s.original_url, s.short_id, i.num_hits, i.date_created, i.last_date_visited, i.is_active, u.username, u.user_id, i.url_info_id
+    FROM short_urls s
+    JOIN urls_info i ON s.url_info_id = i.url_info_id
+    JOIN user u ON s.user_id = u.user_id 
+    WHERE s.user_id = :user_id
+    ORDER BY i.date_created DESC
+  `;
+
+  let params = {
+    user_id: user_id,
+  };
+
+  try {
+    const results = await database.query(recentURLsSQL, params);
+    return results[0];
+  } catch (err) {
+    console.log("Error while retrieving recent URLs from the database.");
+    console.log(err);
+    return [];
+  }
+};
+
 async function createURL(postData) {
   do {
     try {
       await database.query("START TRANSACTION");
-      await _uploadText(postData);
+      await _createURL(postData);
       await database.query("COMMIT");
       return true;
     } catch (err) {
@@ -146,5 +170,6 @@ module.exports = {
   createURL,
   getRecentURLs,
   getShortURLByOriginalURL,
+  getUserRecentUrls,
   isIdExists,
 };

@@ -2,7 +2,7 @@ require("../utils");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const db_urlInfo = require("../database/db_urls_info");
+const db_urlInfo = include("database/db_urls_info");
 const id_checker = require("./modules/idChecker");
 const db_imageUrl = include("database/db_imageUrls");
 const shortId = require("shortid");
@@ -47,13 +47,14 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   const buffer = req.file.buffer.toString("base64");
   const image = "data:image/png;base64," + buffer;
   const customized_name = req.body.customized_name;
-  const nameErr = id_checker.checkName(db_imageUrl.isIdExists, customized_name);
+  const nameErr = await id_checker.checkName(
+    db_imageUrl.isIdExists,
+    customized_name
+  );
   if (nameErr) {
     res.redirect(`/home?image=true&error=${nameErr}`);
     return;
   }
-  res.redirect(`/home?image=true`);
-  return;
   cloudinary.uploader.upload(image).then(async (response) => {
     const uploader_id = req.session.user_id;
     const image_id = customized_name || shortId.generate();

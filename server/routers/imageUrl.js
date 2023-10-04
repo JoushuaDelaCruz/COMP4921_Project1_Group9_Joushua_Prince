@@ -67,6 +67,10 @@ router.post("/upload", upload.single("image"), async (req, res) => {
     const successful = await db_imageUrl.uploadImage(uploadData);
     if (!successful) {
       cloudinary.uploader.destroy(public_id);
+      res.redirect(
+        `/home?image=true&error=${customized_id} already exists. Please choose another name.`
+      );
+      return;
     }
     res.redirect("/home?image=true");
     return;

@@ -1,8 +1,7 @@
 const database = include("mySQLDatabaseConnection");
 const urlInfo = require("./db_urls_info");
 
-const _uploadImage = async (data) => {
-  const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
+const _uploadImage = async (data, urlInfoFk) => {
   const generateShortCodeQuery = `
   SELECT generateUniqueShortCodeForImage() AS shortCode;
   `;
@@ -19,38 +18,30 @@ const _uploadImage = async (data) => {
   `;
 
   const params = {
-    image_id: image_id,
+    image_id: id,
     uploader_id: data.uploader_id,
     cloudinary_public_id: data.cloudinary_public_id,
     url_info_id: urlInfoFk,
   };
-
-  try {
-    await database.query(uploadImageSQL, params);
-    return true;
-  } catch (err) {
-    console.log("Error inserting image");
-    console.log(err);
-    urlInfo.deleteUrlInfo(urlInfoFk);
-    return false;
-  }
+  await database.query(uploadImageSQL, params);
 };
 
 const uploadImage = async (data) => {
+  const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
   do {
     try {
-      await database.beginTransaction();
-      _uploadImage(data);
-      await database.commit();
+      await database.query("START TRANSACTION");
+      await _uploadImage(data, urlInfoFk);
+      await database.query("COMMIT");
       return true;
     } catch (err) {
       if (err.errno === 1062) {
-        console.log("Duplicated ID");
-        await database.rollback();
+        await database.query("ROLLBACK");
       } else {
         console.log("Error inserting image");
         console.log(err);
-        await database.rollback();
+        urlInfo.deleteUrlInfo(urlInfoFk);
+        await database.query("ROLLBACK");
         return false;
       }
     }

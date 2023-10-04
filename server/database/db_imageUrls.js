@@ -1,7 +1,7 @@
 const database = include("mySQLDatabaseConnection");
 const urlInfo = require("./db_urls_info");
 
-const uploadImage = async (data) => {
+const _uploadImage = async (data) => {
   const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
   const generateShortCodeQuery = `
   SELECT generateUniqueShortCodeForImage() AS shortCode;
@@ -34,6 +34,27 @@ const uploadImage = async (data) => {
     urlInfo.deleteUrlInfo(urlInfoFk);
     return false;
   }
+};
+
+const uploadImage = async (data) => {
+  do {
+    try {
+      await database.beginTransaction();
+      _uploadImage(data);
+      await database.commit();
+      return true;
+    } catch (err) {
+      if (err.errno === 1062) {
+        console.log("Duplicated ID");
+        await database.rollback();
+      } else {
+        console.log("Error inserting image");
+        console.log(err);
+        await database.rollback();
+        return false;
+      }
+    }
+  } while (!data.customized_id);
 };
 
 const getUploadedImages = async () => {

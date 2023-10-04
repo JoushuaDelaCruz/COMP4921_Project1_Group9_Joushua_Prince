@@ -25,12 +25,19 @@ router.post("/", async (req, res) => {
   }
   try {
     const url_info_id = await db_urls_info.insertUrlInfoAndGetUrlInfoId();
-    await db_shortener.createURL({
+    const successful = await db_shortener.createURL({
       customized_id: customized_name,
       originalURL: fullUrl,
       user_id: user_id,
       url_info_id: url_info_id,
     });
+    if (!successful) {
+      db_urls_info.deleteUrlInfo(url_info_id);
+      res.redirect(
+        `/home?shortener=true&error=${customized_name} already exists. Please choose another name.`
+      );
+      return;
+    }
     res.redirect("/home?shortener=true");
   } catch (error) {
     console.error("Error creating URL:", error);

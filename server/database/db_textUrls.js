@@ -1,8 +1,7 @@
 const database = include("mySQLDatabaseConnection");
 const urlInfo = require("./db_urls_info");
 
-const uploadText = async (data) => {
-  const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
+const _uploadText = async (data, urlInfoFk) => {
   const generateShortCodeQuery = `
   SELECT generateUniqueShortCodeForText() AS shortCode;
   `;
@@ -24,15 +23,29 @@ const uploadText = async (data) => {
     title: data.title,
     url_info_id: urlInfoFk,
   };
-  try {
-    await database.query(uploadTextSQL, params);
-    return true;
-  } catch (err) {
-    console.log("Error inserting text");
-    console.log(err);
-    urlInfo.deleteUrlInfo(urlInfoFk);
-    return false;
-  }
+  await database.query(uploadTextSQL, params);
+};
+
+const uploadText = async (data) => {
+  const urlInfoFk = await urlInfo.insertUrlInfoAndGetUrlInfoId();
+  do {
+    try {
+      await database.query("START TRANSACTION");
+      await _uploadText(data, urlInfoFk);
+      await database.query("COMMIT");
+      return true;
+    } catch (err) {
+      if (err.errno === 1062) {
+        await database.query("ROLLBACK");
+      } else {
+        console.log("Error inserting image");
+        console.log(err);
+        urlInfo.deleteUrlInfo(urlInfoFk);
+        await database.query("ROLLBACK");
+        return false;
+      }
+    }
+  } while (!data.customized_id);
 };
 
 const getUserTexts = async (user_id) => {

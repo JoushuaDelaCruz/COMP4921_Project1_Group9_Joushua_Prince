@@ -43,7 +43,13 @@ router.post("/upload", async (req, res) => {
     text: text,
     title: title,
   };
-  await db_textUrl.uploadText(textData);
+  const successful = await db_textUrl.uploadText(textData);
+  if (!successful) {
+    res.redirect(
+      `/home?text=true&error=${customized_id} already exists. Please choose another name.`
+    );
+    return;
+  }
   res.redirect("/home?text=true");
   return;
 });

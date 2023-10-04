@@ -3,7 +3,7 @@
         $.cloudinary.config({ cloud_name: '<%= process.env.CLOUDINARY_CLOUD_NAME %>', secure: true});
     </script>
     <div class="container bg-light p-5 mt-4 rounded">
-        <a class="btn btn-primary" href="/home"> Go Back </a>
+        <a class="btn btn-primary" href="/home?image=true"> Go Back </a>
         <figure class="figure p-3 rounded d-flex justify-content-center" style="height: 30rem;">
             <script type="text/javascript">document.write($.cloudinary.imageTag('<%- cloudinary_public_id %>', {class: "figure-img img-fluid rounded"}).toHtml());</script>
         </figure>

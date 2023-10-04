@@ -14,11 +14,7 @@ async function createUser(postData) {
   };
 
   try {
-    console.log(params);
-    const results = await database.query(createUserSQL, params);
-
-    console.log("Successfully created user");
-    console.log(results[0]);
+    await database.query(createUserSQL, params);
     return true;
   } catch (err) {
     console.log("Error inserting user");
@@ -41,10 +37,7 @@ async function getUser(postData) {
   try {
     const results = await database.query(getUsersSQL, params);
     if (results) {
-      console.log("Successfully retrieved users");
-      console.log(results[0]);
       return results[0];
-    } else {
     }
   } catch (err) {
     console.log("Error getting users");

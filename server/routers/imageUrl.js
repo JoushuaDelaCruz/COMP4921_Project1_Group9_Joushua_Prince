@@ -2,7 +2,8 @@ require("../utils");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const db_urlInfo = require("../database/db_urls_info");
+const db_urlInfo = include("database/db_urls_info");
+const id_checker = require("./modules/idChecker");
 const db_imageUrl = include("database/db_imageUrls");
 const shortId = require("shortid");
 
@@ -19,7 +20,7 @@ cloudinary.config({
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({
-  storage: storage
+  storage: storage,
 });
 
 router.get("/", async (req, res) => {
@@ -47,14 +48,21 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   }
   const buffer = req.file.buffer.toString("base64");
   const image = "data:image/png;base64," + buffer;
+  const customized_name = req.body.customized_name;
+  const nameErr = await id_checker.checkName(
+    db_imageUrl.isIdExists,
+    customized_name
+  );
+  if (nameErr) {
+    res.redirect(`/home?image=true&error=${nameErr}`);
+    return;
+  }
   cloudinary.uploader.upload(image).then(async (response) => {
     const uploader_id = req.session.user_id;
-    // const image_id = shortId.generate();
     const public_id = response.public_id;
     const uploadData = {
       uploader_id: uploader_id,
       cloudinary_public_id: public_id,
-      // image_id: image_id,
     };
     const successful = await db_imageUrl.uploadImage(uploadData);
     if (!successful) {

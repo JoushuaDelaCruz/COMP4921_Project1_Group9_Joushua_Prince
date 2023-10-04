@@ -3,71 +3,37 @@ const express = require("express");
 const router = express.Router();
 const db_shortener = include("database/db_shortener");
 const db_urls_info = include("/database/db_urls_info");
-
-const shortId = require("shortid");
-
-// Define a function to truncate a URL to a specific length
-function truncateURL(url, maxLength = 30) {
-  if (url.length > maxLength) {
-    return url.substring(0, maxLength) + "...";
-  }
-  return url;
-}
+const id_checker = require("./modules/idChecker");
 
 router.post("/", async (req, res) => {
-  console.log("Full URL submitted:");
-
   const fullUrl = req.body.fullUrl;
   const user_id = req.session ? req.session.user_id : null;
-  const userSignedIn = req.session ? req.session.user_id : -1;
-
-  console.log("Current user" + user_id);
-
   const existingShortURL = await db_shortener.getShortURLByOriginalURL(fullUrl);
-
   if (existingShortURL) {
-    const recentURLs = await db_shortener.getRecentURLs();
-    console.log("logging recents" + recentURLs);
-
-    // Return the existing short code
-    const shortURL = existingShortURL.short_code;
-
-    res.render("shortener", {
-      shortURL,
-      fullUrl,
-      recentURLs,
-      truncateURL,
-      userSignedIn,
+    res.redirect("/home?shortener=true");
+    return;
+  }
+  // Checks if user's choice of customized name exists already
+  const customized_name = req.body.customized_name;
+  const nameErr = await id_checker.checkName(
+    db_shortener.isIdExists,
+    customized_name
+  );
+  if (nameErr) {
+    res.redirect(`/home?shortener=true&error=${nameErr}`);
+    return;
+  }
+  try {
+    const url_info_id = await db_urls_info.insertUrlInfoAndGetUrlInfoId();
+    await db_shortener.createURL({
+      customized_id: customized_name,
+      originalURL: fullUrl,
+      user_id: user_id,
+      url_info_id: url_info_id,
     });
-  } else {
-    // Generate a unique short ID using shortid
-    const shortcode = shortId.generate();
-    // Ensure that the short URL starts with "http://"
-    const shortURL = shortcode;
-
-    try {
-      const url_info_id = await db_urls_info.insertUrlInfoAndGetUrlInfoId();
-      var results = await db_shortener.createURL({
-        originalURL: fullUrl,
-        shortURL: shortURL,
-        user_id: user_id,
-        url_info_id: url_info_id,
-      });
-    } catch (error) {
-      console.error("Error creating URL:", error);
-    }
-
-    if (results) {
-      const shortURLnew = `${shortcode}`;
-      const recentURLs = await db_shortener.getRecentURLs();
-      res.render("shortener", {
-        shortURL: shortURLnew,
-        fullUrl: fullUrl,
-        recentURLs: recentURLs,
-        truncateURL,
-        userSignedIn,
-      });
-    }
+    res.redirect("/home?shortener=true");
+  } catch (error) {
+    console.error("Error creating URL:", error);
   }
 });
 

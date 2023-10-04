@@ -83,4 +83,25 @@ const getText = async (text_id) => {
   }
 };
 
-module.exports = { uploadText, getUploadedTexts, getText };
+const isIdExists = async (id) => {
+  const imageSQL = `
+    SELECT text_id
+    FROM text_url
+    WHERE text_id = :text_id;
+  `;
+
+  const param = {
+    text_id: id,
+  };
+
+  try {
+    const results = await database.query(imageSQL, param);
+    return results[0][0] !== undefined;
+  } catch (err) {
+    console.log("Error failed to retrieve image");
+    console.log(err);
+    return;
+  }
+};
+
+module.exports = { uploadText, getUploadedTexts, getText, isIdExists };

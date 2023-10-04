@@ -17,7 +17,7 @@ const _uploadText = async (data, urlInfoFk) => {
     	(:text_id,  :uploader_id, :text, :title, :url_info_id);
     `;
   const params = {
-    text_id: data.text_id,
+    text_id: id,
     uploader_id: data.uploader_id,
     text: data.text,
     title: data.title,

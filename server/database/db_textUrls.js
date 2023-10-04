@@ -35,6 +35,37 @@ const uploadText = async (data) => {
   }
 };
 
+const getUserTexts = async (user_id) => {
+  const textsSQL = `
+        	SELECT 
+        	  text_id, 
+        	  title, 
+        	  date_created, 
+        	  uploader_id, 
+        	  username, 
+        	  num_hits, 
+        	  last_date_visited, 
+        	  is_active, 
+        	  ui.url_info_id
+        	FROM text_url as text
+        	JOIN user on uploader_id = user_id
+        	JOIN urls_info as ui on ui.url_info_id = text.url_info_id
+          WHERE uploader_id = :user_id
+          ORDER BY date_created DESC
+    	`;
+  const params = {
+    user_id: user_id,
+  };
+  try {
+    const results = await database.query(textsSQL, params);
+    return results[0];
+  } catch (err) {
+    console.log("Error failed to retrieve uploaded texts");
+    console.log(err);
+    return;
+  }
+};
+
 const getUploadedTexts = async () => {
   const textsSQL = `
         	SELECT 
@@ -112,4 +143,10 @@ const isIdExists = async (id) => {
   }
 };
 
-module.exports = { uploadText, getUploadedTexts, getText, isIdExists };
+module.exports = {
+  uploadText,
+  getUploadedTexts,
+  getText,
+  isIdExists,
+  getUserTexts,
+};

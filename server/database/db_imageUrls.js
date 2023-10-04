@@ -108,8 +108,42 @@ const isIdExists = async (id) => {
   }
 };
 
+const getUserImages = async (user_id) => {
+  const userImagesSQL = `
+    SELECT 
+      image_id, 
+      cloudinary_public_id, 
+      date_created, 
+      uploader_id, 
+      username, 
+      num_hits, 
+      last_date_visited, 
+      is_active, 
+      url_info_id
+    FROM image_url
+    JOIN user on uploader_id = user_id
+    JOIN urls_info USING (url_info_id)
+    WHERE uploader_id = :user_id
+    ORDER BY date_created DESC
+  `;
+
+  const param = {
+    user_id: user_id,
+  };
+
+  try {
+    const results = await database.query(userImagesSQL, param);
+    return results[0];
+  } catch (err) {
+    console.log("Error failed to retrieve image");
+    console.log(err);
+    return;
+  }
+};
+
 module.exports = {
   uploadImage,
+  getUserImages,
   getUploadedImages,
   getImage,
   isIdExists,

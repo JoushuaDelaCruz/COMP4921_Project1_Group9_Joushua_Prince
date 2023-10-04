@@ -1,0 +1,11 @@
+<% if (isUserSignedIn) { %> 
+    <div class="d-flex justify-content-between align-items-center">
+        <h1 class="my-4"> <%= locals.onlyUserContent ? "Only Your Content" : "All Content"%> </h1>
+        <form action="/home/onlyUserContent" method="POST">
+            <input type="hidden" name="page" value="<%= page %>">
+            <button type="submit" class="btn btn-primary fw-medium"><%= locals.onlyUserContent ? 'Show All' : 'Show only your Content'%></button>
+        </form>
+    </div>
+<% } else { %>
+    <h1 class="my-4"> All Content </h1>
+<% }%>

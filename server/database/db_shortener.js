@@ -22,6 +22,30 @@ const getOriginalURL = async (postData) => {
   }
 };
 
+const getUserRecentUrls = async (user_id) => {
+  const recentURLsSQL = `
+    SELECT s.original_url, s.short_id, i.num_hits, i.date_created, i.last_date_visited, i.is_active, u.username, u.user_id, i.url_info_id
+    FROM short_urls s
+    JOIN urls_info i ON s.url_info_id = i.url_info_id
+    JOIN user u ON s.user_id = u.user_id 
+    WHERE s.user_id = :user_id
+    ORDER BY i.date_created DESC
+  `;
+
+  const params = {
+    user_id: user_id,
+  };
+
+  try {
+    const results = await database.query(recentURLsSQL, params);
+    return results[0];
+  } catch (err) {
+    console.log("Error while retrieving recent URLs from the database.");
+    console.log(err);
+    return [];
+  }
+};
+
 async function createURL(postData) {
   // Call the stored function to generate a unique short code
   const generateShortCodeQuery = `
@@ -125,6 +149,7 @@ module.exports = {
   getOriginalURL,
   createURL,
   getRecentURLs,
+  getUserRecentUrls,
   getShortURLByOriginalURL,
   isIdExists,
 };

@@ -37,7 +37,7 @@
  <% } %>
 
 <main class="container-fluid py-5" style="max-height: 75%">
-    <h1 class="my-4"> Contents </h1>
+    <%- include("./contentHeader", {page: 'image'}) %>
     <section class="d-flex flex-row justify-content-center align-self-center flex-wrap column-gap-3 row-gap-4">
         <% if (locals.images) {%>
             <% let i = 0; %>

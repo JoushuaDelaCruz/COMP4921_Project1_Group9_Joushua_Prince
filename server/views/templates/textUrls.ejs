@@ -20,7 +20,7 @@
   </div>
 <% } %>
 <main class="container-fluid py-5" style="max-height: 75%">
-  <h1 class="my-4"> Contents </h1>
+  <%- include("./contentHeader", {page: 'text'}) %>
   <table class="table table-hover table-borderless">
     <tbody>
       <% if (locals.texts) {%>

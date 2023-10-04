@@ -25,10 +25,15 @@ function truncateURL(url, maxLength = 35) {
 
 router.get("/", async (req, res) => {
   const { shortener, text, error } = req.query;
+  const user_id = req.session ? req.session.user_id : -1;
   const authenticated = req.session ? req.session.authenticated : false;
-  const recentURLs = await db_shortener.getRecentURLs();
+  const onlyUserContent = req.session ? req.session.onlyUserContent : false;
   if (shortener) {
+    const recentURLs = onlyUserContent
+      ? await db_shortener.getUserRecentUrls(user_id)
+      : await db_shortener.getRecentURLs();
     const bundle = {
+      onlyUserContent: onlyUserContent,
       recentURLs: recentURLs,
       isUserSignedIn: authenticated,
       imageClass: "text-light",
@@ -41,9 +46,12 @@ router.get("/", async (req, res) => {
     res.render("index", bundle);
     return;
   }
-  const texts = await db_textUrl.getUploadedTexts();
   if (text) {
+    const texts = onlyUserContent
+      ? await db_textUrl.getUserTexts(user_id)
+      : await db_textUrl.getUploadedTexts();
     const bundle = {
+      onlyUserContent: onlyUserContent,
       texts: texts,
       isUserSignedIn: authenticated,
       imageClass: "text-light",
@@ -55,8 +63,11 @@ router.get("/", async (req, res) => {
     res.render("index", bundle);
     return;
   }
-  const images = await db_imageUrl.getUploadedImages();
+  const images = onlyUserContent
+    ? await db_imageUrl.getUserImages(user_id)
+    : await db_imageUrl.getUploadedImages();
   const bundle = {
+    onlyUserContent: onlyUserContent,
     images: images,
     isUserSignedIn: authenticated,
     imageClass: "active",
@@ -67,6 +78,12 @@ router.get("/", async (req, res) => {
   };
   res.render("index", bundle);
   return;
+});
+
+router.post("/onlyUserContent", (req, res) => {
+  const page = req.body.page;
+  req.session.onlyUserContent = !req.session.onlyUserContent;
+  res.redirect(`/home?${page}=true`);
 });
 
 router.post("/logOut", (req, res) => {

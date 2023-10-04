@@ -15,10 +15,10 @@ router.get("/", (req, res) => {
   if (invalidBundle) {
     cache.del("createUserInvalid");
     cache.close();
-    res.render("signup", invalidBundle);
+    res.render("signUp", invalidBundle);
     return;
   }
-  res.render("signup", { username: "" });
+  res.render("signUp", { username: "" });
 });
 
 router.post("/createUser", async (req, res) => {

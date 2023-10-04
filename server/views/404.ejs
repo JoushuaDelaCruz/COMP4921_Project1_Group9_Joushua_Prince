@@ -1,0 +1,19 @@
+<%- include("templates/header", {title: 'LinkMorpher - Not Found', additionalStyle: 'authentication.css'}) %>
+<main class="vh-100 d-flex flex-column justify-content-center align-items-center text-light">
+    <div class="container d-flex flex-column fw-medium">
+        <div class="mb-5">
+            <div class="d-flex gap-4 align-items-center">
+                <div class="text fs-1 mb-3">Page not found</div>
+                <img src="shrug.png" alt="Shrug Person" class="img-thumbnail bg-transparent border-0" style="height: 10vh;">
+            </div>
+            <div>
+                <div class="text fs-4">This may not mean anything.</div>
+                <div class="text fs-4">We are probably working on something that has blown up.</div>
+            </div>
+        </div>
+        <div>
+            <a href="/home?image=true" class="btn btn-info"> Home </a>
+        </div>
+    </div>
+</main>           
+<%- include("templates/footer") %>

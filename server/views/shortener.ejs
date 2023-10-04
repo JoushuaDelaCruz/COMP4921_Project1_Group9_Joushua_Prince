@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <h1>URL Shrinker</h1>
+    <% if (userSignedIn) { %>
+    <form action="/shortener" method="POST" class="my-4 form-inline">
+      <label for="fullUrl" class="sr-only">Url</label>
+      <input  placeholder="Url" type="url" name="fullUrl" id="fullUrl" class="form-control col mr-2">
+      <button class="btn btn-success" type="submit">Shrink</button>
+    </form>
+    <% } else { %>
+      <p>Sorry, you must be logged in to shrink URLs.</p>
+    <% } %>
+
+    
+ 
+    <% if (typeof shortURL !== 'undefined') { %>
+      <div class="alert alert-success mt-3">
+        <p>Shortened URL: <a href="/shortener/<%=shortURL%>"id="shortened-link"><%= shortURL %></a></p>
+      </div>
+    <% } %>
+    
+    <table class="table table-striped table-responsive">
+      <thead>
+        <tr>
+          <th>Full URL</th>
+          <th>Short URL</th>
+          <th>Clicks</th>
+          <th>Date Created</th> <!-- Add Date Created column -->
+          <th>Last Visited</th> <!-- Add Last Visited column -->
+          <th>Is Active</th> <!-- Add Is Active column -->
+          <th>Action</th> <!-- Add a new column for the Delete action -->
+        </tr>
+      </thead>
+      <tbody>
+        <% if (recentURLs && recentURLs.length > 0) { %>
+          <% for (let i = 0; i < recentURLs.length; i++) { %>
+            <tr>
+              <td><%= truncateURL(recentURLs[i].original_url) %></td>
+              <% if (recentURLs[i].is_active === 1) { %>
+                <!-- Only make the link clickable when is_active is 1 -->
+                <td><a href="/shortener/<%= recentURLs[i].short_code %>"><%= recentURLs[i].short_code %></a></td>
+              <% } else { %>
+                <!-- Display the URL text as plain text when is_active is 0 -->
+                <td><%= recentURLs[i].short_code %></td>
+              <% } %>
+              <td><%= recentURLs[i].num_hits %></td>
+              <td><%= recentURLs[i].date_created %></td> <!-- Add Date Created value -->
+              <td><%= recentURLs[i].last_date_visited %></td> <!-- Add Last Visited value -->
+              <td>
+                <% if (recentURLs[i].is_active === 1) { %>
+                  <!-- Display "Active" or checkmark (✓) if isActive is true -->
+                  Active
+                <% } else { %>
+                  <!-- Display "Inactive" if isActive is false -->
+                  Inactive
+                <% } %>
+              </td>
+              <td>
+                <% if (userSignedIn) { %>
+                  <form action="/shortener/<%= recentURLs[i].is_active === 0 ? 'activate' : 'deactivate' %>/<%= recentURLs[i].short_code %>" method="POST" class="toggle-activation-form">
+                    <button type="submit" class="btn btn-<%= recentURLs[i].is_active === 0 ? 'success' : 'danger' %> btn-sm">
+                      <%= recentURLs[i].is_active === 0 ? 'Activate' : 'Deactivate' %>
+                    </button>
+                  </form>
+                <% } %>                
+              </td>
+            </tr>
+          <% } %>
+        <% } else { %>
+          <tr>
+            <td colspan="6">No recent URLs available.</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    
+    
+
+    
+
+    <div class="alert alert-success mt-3">
+      
+    </div>
+  </div>
+  
+</body>
+</html>

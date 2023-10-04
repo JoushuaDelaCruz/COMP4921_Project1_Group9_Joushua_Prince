@@ -1,22 +1,20 @@
-const express = require("express");
 require("./utils");
 require("dotenv").config();
-const session = require("express-session");
+const express = require("express");
 const MongoStore = require("connect-mongo");
-const bcrypt = require("bcrypt");
-const database = include("databaseConnection");
-const db_utils = include("database/db_utils");
-const db_users = include("database/users");
-const saltRounds = 12;
-
+const session = require("express-session");
+const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 5000;
-
 const app = express();
-app.use(express.json());
 
-// Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, "../client/build")));
+app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
+const expireTime = 60 * 60 * 1000; //expires after 1 day  (hours * minutes * seconds * millis)
+
+//** MongoDB Session */
 /* secret information section */
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -25,9 +23,7 @@ const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
 const node_session_secret = process.env.NODE_SESSION_SECRET;
 /* END secret section */
 
-app.use(express.urlencoded({ extended: false }));
-
-var mongoStore = MongoStore.create({
+const mongoStore = MongoStore.create({
   mongoUrl: `mongodb+srv://${mongodb_user}:${mongodb_password}@cluster0.nbfzg7h.mongodb.net/?retryWrites=true&w=majority`,
   crypto: {
     secret: mongodb_session_secret,
@@ -41,50 +37,31 @@ app.use(
     saveUninitialized: false,
     resave: true,
     cookie: {
-      maxAge: 1000 * 60 * 60, // 1 hour
+      maxAge: expireTime, // 1 hour
     },
   })
 );
 
-app.get("/api", (req, res) => {
-  res.send("Hello World, using proxy to reach server side");
-});
+const imageRouter = require("./routers/imageUrl");
+const textRouter = require("./routers/textUrl");
+const signUpRouter = require("./routers/signUp");
+const shortenURLrouter = require("./routers/shortener");
+const homeRouter = require("./routers/homepage");
+const loginRouter = require("./routers/logIn");
 
-app.get("/createTables", async (req, res) => {
-  console.log("Attempt to create table");
-  const create_tables = include("database/create_tables");
-  var success = create_tables.createTables();
-  if (success) {
-    res.send("successMessage");
-  } else {
-    res.send("errorMessage");
-  }
-});
+app.use("/login", loginRouter);
+app.use("/signup", signUpRouter);
+app.use("/shortener", shortenURLrouter);
+app.use("/textUrls", textRouter);
+app.use("/imageUrls", imageRouter);
+app.use("/home", homeRouter);
 
-// Define the /api/createUser endpoint
-app.post("/api/createUser", async (req, res) => {
-  console.log(req.body);
-
-  try {
-    const { user, hashedPassword } = req.body;
-
-    const success = await db_users.createUser({ user, hashedPassword });
-
-    if (success) {
-      console.log("User created successfully");
-      res.status(200).json({ message: "User created successfully" });
-    } else {
-      console.error("YIkes Failed to create user");
-      res.status(500).json({ error: "Failed to create user" });
-    }
-  } catch (error) {
-    console.error("Error while creating user:", error);
-    res.status(500).json({ error: "Failed to create user" });
-  }
+app.get("/", (req, res) => {
+  res.redirect("/home?image=true");
 });
 
 app.get("*", (req, res) => {
-  res.sendStatus(404);
+  res.status(404).render("404");
 });
 
 app.listen(PORT, () => {

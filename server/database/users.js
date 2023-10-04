@@ -1,32 +1,49 @@
-const database = include('databaseConnection');
+const database = include("mySQLDatabaseConnection");
 
 async function createUser(postData) {
-	let createUserSQL = `
+  let createUserSQL = `
 		INSERT INTO user
 		(username, password)
 		VALUES
-		(:user,  :passwordHash);
+		(:username,  :passwordHash);
 	`;
 
+  let params = {
+    username: postData.username,
+    passwordHash: postData.password,
+  };
 
-	let params = {
-		user: postData.user,
-		passwordHash: postData.hashedPassword,
-        
-	}
-	
-	try {
-		const results = await database.query(createUserSQL, params);
-
-        console.log("Successfully created user");
-		console.log(results[0]);
-		return true;
-	}
-	catch(err) {
-		console.log("Error inserting user");
-        console.log(err);
-		return false;
-	}
+  try {
+    await database.query(createUserSQL, params);
+    return true;
+  } catch (err) {
+    console.log("Error inserting user");
+    console.log(err);
+    return false;
+  }
 }
 
-module.exports = {createUser};
+async function getUser(postData) {
+  console.log("Checking users in database" + postData);
+  console.log(postData);
+  let getUsersSQL = `
+		SELECT *
+		FROM user
+		WHERE username = :username;
+	`;
+  let params = {
+    username: postData.user,
+  };
+  try {
+    const results = await database.query(getUsersSQL, params);
+    if (results) {
+      return results[0];
+    }
+  } catch (err) {
+    console.log("Error getting users");
+    console.log(err);
+    return false;
+  }
+}
+
+module.exports = { createUser, getUser };

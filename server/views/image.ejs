@@ -1,0 +1,31 @@
+<%- include("templates/header", {title: 'LinkMorpher - Image', image: true}) %>
+    <script type="text/javascript"> 
+        $.cloudinary.config({ cloud_name: '<%= process.env.CLOUDINARY_CLOUD_NAME %>', secure: true});
+    </script>
+    <div class="container bg-light p-5 mt-4 rounded">
+        <a class="btn btn-primary" href="/home"> Go Back </a>
+        <figure class="figure p-3 rounded d-flex justify-content-center" style="height: 30rem;">
+            <script type="text/javascript">document.write($.cloudinary.imageTag('<%- cloudinary_public_id %>', {class: "figure-img img-fluid rounded"}).toHtml());</script>
+        </figure>
+        <hr class="my-4">
+        <div class="container w-100 h-75">
+            <p class="fs-3">Uploader: <span class="fw-semibold"> <%= username %> </span></p>
+            <p class="fs-3">Date Created: <span class="fw-semibold"> <%= date_created %> </span></p>
+        </div>
+    </div>
+    <% if (owner){ %>
+        <% if (is_active === 1) { %>
+            <form action="/imageUrls/deactivate" class="d-flex justify-content-center my-3" method="POST">
+                <input type="hidden" name="image_id" value="<%= image_id %>"/>
+                <input type="hidden" name="url_info_id" value="<%= url_info_id %>"/>
+                <button class="btn btn-success"> Deactivate </button>
+            </form>
+        <% } else { %>
+            <form action="/imageUrls/activate" class="d-flex justify-content-center my-3" method="POST">
+                <input type="hidden" name="image_id" value="<%= image_id %>"/>
+                <input type="hidden" name="url_info_id" value="<%= url_info_id %>"/>
+                <button class="btn btn-info"> Activate </button>
+            </form>
+        <% } %>
+    <% } %>
+<%- include("templates/footer") %>

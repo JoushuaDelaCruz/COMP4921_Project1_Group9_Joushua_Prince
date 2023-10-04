@@ -1,0 +1,35 @@
+<nav class="navbar navbar-dark bg-primary py-3 px-2">
+    <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand fw-bold fs-3" href="/">LinkMorpher</a>
+        </div><ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link fw-semibold <%= imageClass %>" aria-current="page" href="/home?image=true">ImageURL</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fw-semibold <%= shortenerClass %>" aria-current="page" href="/home?shortener=true">URLShortener</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link fw-semibold <%= textClass %>" aria-current="page" href="/home?text=true">TextURL</a>
+              </li>
+          </ul>
+        <% if (isUserSignedIn) { %> 
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <form action="/home/logOut" method="POST">
+                        <button class="btn nav-link active fw-medium text-dark" aria-current="page" type="submit">Log Out</button>
+                    </form>
+                  </li>
+            </ul>
+         <% } else {%>
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link active fw-medium text-dark" aria-current="page" href="/signup">Sign Up</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active fw-medium text-dark" href="/login">Log In</a>
+                  </li>
+            </ul>
+        <% } %>
+      </div>
+  </nav>

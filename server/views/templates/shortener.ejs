@@ -1,0 +1,36 @@
+<% if (isUserSignedIn) { %> 
+    <div class="shadow-sm p-3 bg-body-tertiary rounded row p-4 mx-5 my-5 bg-opacity-75 border border-dark-subtle">
+        <form action="/shortener" method="POST" class="d-flex my-4 flex-column justify-content-center ">
+            <input required placeholder="Enter a long url" type="url" name="fullUrl" id="fullUrl" class="form-control col border border-2 border-dark-subtle mr-2" >
+
+            <div class="d-flex flex-wrap flex-column align-items-center align-self-center align-content-center mt-5 text-dark" style="width: 600px;" id="customized_name">
+                <label for="customized_id" class="fs-6 fw-medium">Customized Url Name</label>
+                <input required placeholder="Enter a customized url name" type="text" name="customized_id" class="form-control col border border-2 <%= locals.error ? 'is-invalid border-danger' : 'border-dark-subtle' %>" >
+                <div class="invalid-feedback">
+                    <%= locals.error %>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                <button class="btn btn-primary" type="submit">Shrink</button>
+            </div>
+        </form>
+        <% if (typeof shortURL !== 'undefined') { %>
+            <div class="alert alert-success mt-3">
+              <p>Shortened URL: <a href="/shortener/<%=shortURL%>"id="shortened-link"><%= shortURL %></a></p>
+            </div>
+        <% } %>
+    </div>
+ <% } %>
+<main class="container-fluid py-5" style="max-height: 75%">
+    <%- include("./contentHeader", {page: 'shortener'}) %>
+    <table class="table table-hover table-borderless">
+      <tbody>
+        <% if (locals.recentURLs) {%>
+            <% let i = 0; %>
+            <% for(i = 0; i < recentURLs.length; i++) { %>
+                <%- include("./shortenerCard", {url: recentURLs[i]}) %>
+            <% } %>
+        <% } %>
+      </tbody>
+    </table>
+</main>

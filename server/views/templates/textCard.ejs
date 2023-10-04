@@ -1,0 +1,63 @@
+<% if (text.is_active === 1) { %>
+    <tr>
+        <td class="d-flex justify-content-between">
+          <div class="d-flex align-items-center mx-3 text-primary-emphasis">
+            <div class="d-flex flex-column justify-content-center align-items-center p-3 border-end border-2 border-primary-subtle">
+              <span class="fw-semibold fs-4 text m-0 p-0"> <%- text.num_hits %> </span> 
+              <p class="text-body-tertiary fw-medium m-0 p-0" style="font-size: 0.80rem;">hits</p>
+            </div>
+            <a href="/textUrls?text=<%- text.text_id %>" class="link-underline link-underline-opacity-0 link-body-emphasis">
+              <div class="d-flex flex-column ml-3 py-3 pr-4">
+                <h2 class="fs-5 p-0 mb-1 fs-4"> <%- text.title %> </h2>
+                <span class="d-flex gap-2" style="font-size: 0.90rem;">
+                  <p class="p-0 mb-0"> <span class="fw-medium"> Author: </span> <%- text.username %> </p>
+                  <p class="p-0 mb-0 fw-semibold"> | </p>
+                  <p class="p-0 m-0"> <span class="fw-medium"> Written Date: </span> <%- text.date_created %> </p>
+                </span>
+                <% if (text.last_date_visited){ %>
+                  <span class="p-0 m-0" style="font-size: 0.90rem;">
+                      <span class="fw-medium"> Last Visited: </span> <%- text.last_date_visited %>
+                  </span>
+                <% } %>
+              </div>
+            </a>
+          </div>
+          <% if (text.uploader_id === userSignedIn){ %>
+            <form action="/textUrls/deactivate" class="d-flex align-items-center" method="POST">
+                <input type="hidden" name="url_info_id" value="<%= text.url_info_id %>"/>
+                <button class="btn btn-success"> Deactivate </button>
+            </form>
+          <% } %>
+        </td>
+    </tr>
+<% } else { %>
+  <tr>
+    <td class="d-flex justify-content-between">
+      <div class="d-flex align-items-center mx-3 text-body-secondary">
+        <div class="d-flex flex-column justify-content-center align-items-center p-3 border-end border-2 border-primary-subtle">
+          <span class="fw-semibold fs-4 text m-0 p-0"> <%- text.num_hits %> </span> 
+          <p class="text-body-tertiary fw-medium m-0 p-0" style="font-size: 0.80rem;">hits</p>
+        </div>
+          <div class="d-flex flex-column ml-3 py-3 pr-4">
+            <h2 class="fs-5 p-0 mb-1 fs-4"> <%- text.title %> </h2>
+            <span class="d-flex gap-2" style="font-size: 0.90rem;">
+              <p class="p-0 mb-0"> <span class="fw-medium"> Author: </span> <%- text.username %> </p>
+              <p class="p-0 mb-0 fw-semibold"> | </p>
+              <p class="p-0 m-0"> <span class="fw-medium"> Written Date: </span> <%- text.date_created %> </p>
+            </span>
+            <% if (text.last_date_visited){ %>
+              <span class="p-0 m-0" style="font-size: 0.90rem;">
+                  <span class="fw-medium"> Last Visited: </span> <%- text.last_date_visited %>
+              </span>
+            <% } %>
+          </div>
+      </div>
+      <% if (text.uploader_id === userSignedIn){ %>
+        <form action="/textUrls/activate" class="d-flex align-items-center" method="POST">
+            <input type="hidden" name="url_info_id" value="<%= text.url_info_id %>"/>
+            <button class="btn btn-info"> Activate </button>
+        </form>
+      <% } %>
+    </td>
+  </tr>
+<% } %>

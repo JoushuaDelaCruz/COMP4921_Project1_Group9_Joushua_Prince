@@ -6,9 +6,9 @@
               <span class="fw-semibold fs-4 text m-0 p-0"> <%= url.num_hits %> </span> 
               <p class="text-body-tertiary fw-medium m-0 p-0" style="font-size: 0.80rem;">hits</p>
             </div>
-            <a href="/shortener?short_code=<%= url.short_code %>" class="link-underline link-underline-opacity-0 link-body-emphasis">
+            <a href="/shortener?short_code=<%= url.short_id %>" class="link-underline link-underline-opacity-0 link-body-emphasis">
               <div class="d-flex flex-column ml-3 py-3 pr-4 w-">
-                <h2 class="fs-5 p-0 mb-0 fs-4"> Short Url: <%= url.short_code %>  </h2>
+                <h2 class="fs-5 p-0 mb-0 fs-4"> Short Url: <%= url.short_id %>  </h2>
                 <h3 class="p-0 mb-1 fs-6"> Original Url: <%= truncateURL(url.original_url) %> </h3>
                 <span class="d-flex gap-2" style="font-size: 0.90rem;">
                   <p class="p-0 mb-0"> <span class="fw-medium"> Uploader: </span> <%= url.username %> </p>
@@ -40,7 +40,7 @@
               <p class="text-body-tertiary fw-medium m-0 p-0" style="font-size: 0.80rem;">hits</p>
             </div>
               <div class="d-flex flex-column ml-3 py-3 pr-4 w-">
-                <h2 class="fs-5 p-0 mb-0 fs-4"> Short Url: <%= url.short_code %>  </h2>
+                <h2 class="fs-5 p-0 mb-0 fs-4"> Short Url: <%= url.short_id %>  </h2>
                 <h3 class="p-0 mb-1 fs-6"> Original Url: <%= truncateURL(url.original_url) %> </h3>
                 <span class="d-flex gap-2" style="font-size: 0.90rem;">
                   <p class="p-0 mb-0"> <span class="fw-medium"> Uploader: </span> <%= url.username %> </p>

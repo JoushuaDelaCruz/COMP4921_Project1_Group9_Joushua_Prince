@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
   const textData = await db_textUrl.getText(text_id);
   const user_id = req.session ? req.session.user_id : -1;
   if (!textData[0]) {
-    res.send("/404");
+    res.redirect("/404");
     return;
   }
   const uploader_id = textData[0].uploader_id;
